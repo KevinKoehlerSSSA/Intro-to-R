@@ -14,54 +14,38 @@ greater5 <- function(x) {
   return(result)  # Return results 
 }
 
+## read data into R
 
-## Show all data sets included in R
-data()
+tun22 <- read_csv("https://raw.githubusercontent.com/KevinKoehlerSSSA/Intro-to-R/refs/heads/main/tunisia_survey.csv")
 
-## write the arrests data set into the environment, calling it data
-data <- arrests
+## Typical age of all respondents
 
-## The typical value of murders per 100,000 inhabitants across all states is the mean
-mean(data$Murder) # note that capitalization matters, data$murder would not work
-# equivalently
-sum(data$Murder)/length(data$Murder)
+# using the mean() function
+mean(tun22$age, na.rm=T) 
 
-## The value such that 50% of states have lower murder rates is the median
-median(data$Murder)
-# equivalently (but, admittedly, more complicated)
-data <- data %>%
-  arrange(Murder) # arrange the data according to the murder rate
-# take the average of the 25th and the 26th value
-(data$Murder[length(data$Murder)/2]+data$Murder[(length(data$Murder)/2)+1])/2
+# the same thing manually
+sum(tun22$age,na.rm=T)/sum(!is.na(tun22$age))
 
-## The most frequent murder rate is the mode
-as.numeric(names(table(data$Murder)[table(data$Murder)==max(table(data$Murder))]))
+## typical age of Saied voters
+mean(tun22$age[tun22$pres2019_1==1], na.rm = T)
 
-## Describe how much states differ from each other in terms ofmurder rates. Which measures could you use? Why?
-## I would use the range and the standard deviation
+# or, manually:
+sum(tun22$age[tun22$pres2019_1==1], na.rm = T)/sum(!is.na(tun22$age[tun22$pres2019_1 == 1]))
 
-# Range:
-max(data$Murder)-min(data$Murder)
-# Standard deviation
-sd(data$Murder)
-# or, equivalently
-sqrt(var(data$Murder))
-
-# you can also calulate the variance
-var(data$Murder)
-
-# and the interquartile range
-IQR(data$Murder)
+## Variation in education levels
+sd(tun22$edu[tun22$pres2019_1==1], na.rm=T)
 
 ## Write a function which calculates all of these measures at the same time.
 
 summary_function <- function(x) {
-  x_mean <- mean(x)
-  x_median <- median(x)
-  x_range <- max(x)-min(x)
-  x_sd <- sd(x)
+  x_mean <- mean(x, na.rm=T)
+  x_median <- median(x, na.rm=T)
+  x_range <- max(x, na.rm=T)-min(x, na.rm=T)
+  x_sd <- sd(x, na.rm=T)
   cat("Mean: ", x_mean, "\n",
       "Median: ", x_median, "\n",
       "Range: ", x_range, "\n",
       "SD: ", x_sd, "\n")
 }
+
+summary_function(tun22$edu)
