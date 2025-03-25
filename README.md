@@ -1,1 +1,1 @@
-Open the index.md file above to access course content.
+Open the [Index](index.md) file above to access course content.
