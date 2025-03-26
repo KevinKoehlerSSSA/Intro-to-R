@@ -9,5 +9,9 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 - [2014 Electoral Results](res2014.csv)
 - [2019 Electoral Results](res2019.csv)
 ## Slides and code files
+### Session 1
 - [Slides session 1](Session-1.pdf)
 - [Code session 1](#)
+### Session 2
+- [Slides session 2](Session-2.pdf)
+- [Electoral results from Wikipedia](Scrape-Wikipedia.R)
