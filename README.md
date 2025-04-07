@@ -17,3 +17,5 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 ### Session 2
 - [Slides session 2](Session-2.pdf)
 - [Electoral results from Wikipedia](Scrape-Wikipedia.R)
+### Session 3
+- [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
