@@ -22,4 +22,4 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 #### Plots to reproduce:
 <img src="MPs_lose_touch.jpg" style="width:50%;"/><img src="MPs_lose_touch_perc.jpg" style="width:50%;"/>
-<img src="MPs_lose_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_income.jpg" style="width:50%;"/>
+<img src="MPs_lose_touch_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_income.jpg" style="width:50%;"/>
