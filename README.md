@@ -21,4 +21,4 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 - [Slides session 3](Session-3.pdf)
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 #### Plots to reproduce:
-![](MPs_lose_touch.jpg)
+<img src="MPS_lose_touch.jpg" style="width:50%;"/>
