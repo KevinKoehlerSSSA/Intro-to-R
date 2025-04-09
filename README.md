@@ -21,10 +21,14 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 - [Slides session 3](Session-3.pdf)
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 #### Plots to reproduce:
+
+The first four plots use the Tunisia survey data, the final four use the [V-Dem data](https://github.com/vdeminstitute/vdemdata). 
+
 <img src="MPs_lose_touch.jpg" style="width:50%;"/><img src="MPs_lose_touch_perc.jpg" style="width:50%;"/>
 <img src="MPs_lose_touch_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_voted.jpg" style="width:50%;"/>
 <img src="Perc_dem.jpg" style="width:50%;"/><img src="Perc_dem_reg.jpg" style="width:50%;"/>
 <img src="Dem_dev.jpg" style="width:50%;"/><img src="Dem_dev_reg.jpg" style="width:50%;"/>
+
 - [Code](plot_code.R)
 
 ### Session 4: R programming
