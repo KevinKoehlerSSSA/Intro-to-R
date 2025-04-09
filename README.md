@@ -26,15 +26,35 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 <img src="Perc_dem.jpg" style="width:50%;"/><img src="Perc_dem_reg.jpg" style="width:50%;"/>
 <img src="Dem_dev.jpg" style="width:50%;"/><img src="Dem_dev_reg.jpg" style="width:50%;"/>
 - [Code](plot_code.R)
+
 ### Session 4: R programming
-
+- [Slides session 4](#)
+- [Code session 4](#)
+  
 ### Session 5: Exploring data
-
+- [Slides session 5](#)
+- [Code session 5](#)
+  
 ### Session 6: Linear regression
+- [Slides session 6](#)
+- [Code session 6](#)
 
 ### Session 7: Replication I: U.S. Soft-Power and Foreign Policy Behavior
 
 We will reproduce the analysis in the article below. Make sure to read it carefully before class. 
 
--  Goldsmith, Benjamin E. and Yusaku Horiuchi. 2012. ``In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?'' *World Politics*, 64 (3): 555-585. [doi:10.1017/S0043887112000123](https://www.cambridge.org/core/journals/world-politics/article/in-search-of-soft-power-does-foreign-public-opinion-matter-for-us-foreign-policy/0C9DB5A0FB1EF43767932DE4E2C4DCEF)
+-  Goldsmith, Benjamin E. and Yusaku Horiuchi. 2012. "In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?" *World Politics* 64 (3): 555-585. [doi:10.1017/S0043887112000123](https://www.cambridge.org/core/journals/world-politics/article/in-search-of-soft-power-does-foreign-public-opinion-matter-for-us-foreign-policy/0C9DB5A0FB1EF43767932DE4E2C4DCEF)
 -  The data are available [here](https://github.com/joshuaalley/cross-sectional-ols)
+-  [Code session 7](#)
+
+### Session 8: Logistic regression
+- [Slides session 8](#)
+- [Code session 8](#)
+
+### Sesssion 9: Replication II - Does Counterbalancing Prevent Military Coups?
+
+We will reproduce the analysis in the article below. Make sure to read it carefully before class. 
+
+-  De Bruin, Erica. 2018. "Preventing Coups d’état: How Counterbalancing Works." *Journal of Conflict Resolution* 62 (7): 1433–58. [doi: 10.1177/0022002717692652](https://doi.org/10.1177/0022002717692652)
+-  The data are available [here](https://journals.sagepub.com/doi/abs/10.1177/0022002717692652)
+-  [Code session 9](#)
