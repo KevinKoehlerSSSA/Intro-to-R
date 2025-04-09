@@ -20,3 +20,4 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 ### Session 3
 - [Slides session 3](Session-3.pdf)
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
+#### Plots to reproduce:
