@@ -33,3 +33,8 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 ### Session 6: Linear regression
 
 ### Session 7: Replication I: U.S. Soft-Power and Foreign Policy Behavior
+
+We will reproduce the analysis in the article below. Make sure to read it carefully before class. 
+
+-  Goldsmith, Benjamin E. and Yusaku Horiuchi. 2012. ``In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?'' *World Politics*, 64 (3): 555-585. [doi:10.1017/S0043887112000123](https://www.cambridge.org/core/journals/world-politics/article/in-search-of-soft-power-does-foreign-public-opinion-matter-for-us-foreign-policy/0C9DB5A0FB1EF43767932DE4E2C4DCEF)
+-  The data are available [here](https://github.com/joshuaalley/cross-sectional-ols)
