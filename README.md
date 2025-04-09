@@ -5,7 +5,7 @@ Welcome to the GitHub repository for the Data Analysis for the Social Sciences w
 ## Syllabus
 - [Syllabus](Syllabus.pdf)
 ## Data and codebook
-In the first part of the class, we will work with data on Tunisia. Below are the codebook and the data of a survey we fielded there in 2014 as well as data files containing the resulst of the 2014 and 2019 legislative elections in Tunisia. 
+In the first part of the class, we will work with data on Tunisia. Below are the codebook and the data of a survey we fielded there in 2022 as well as data files containing the resulst of the 2014 and 2019 legislative elections in Tunisia. 
 - [Codebook Tunisia Survey](Codebook-TUN-Survey.pdf)
 - [Data Tunisia Survey](tunisia_survey.csv)
 - [2014 Electoral Results](res2014.csv)
