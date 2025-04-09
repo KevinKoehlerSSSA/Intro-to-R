@@ -24,10 +24,10 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 
 The first four plots use the Tunisia survey data, the final four use the [V-Dem data](https://github.com/vdeminstitute/vdemdata). Feel free to pick any plot to start with--no need to follow the sequence or reproduce them all. 
 
-<img src="MPs_lose_touch.jpg" style="width:50%;"/><img src="MPs_lose_touch_perc.jpg" style="width:50%;"/>
-<img src="MPs_lose_touch_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_voted.jpg" style="width:50%;"/>
-<img src="Perc_dem.jpg" style="width:50%;"/><img src="Perc_dem_reg.jpg" style="width:50%;"/>
-<img src="Dem_dev.jpg" style="width:50%;"/><img src="Dem_dev_reg.jpg" style="width:50%;"/>
+<img src="MPs_lose_touch.jpg" style="width:40%;"/><img src="MPs_lose_touch_perc.jpg" style="width:40%;"/>
+<img src="MPs_lose_touch_gender.jpg" style="width:40%;"/><img src="MPs_lose_touch_voted.jpg" style="width:40%;"/>
+<img src="Perc_dem.jpg" style="width:40%;"/><img src="Perc_dem_reg.jpg" style="width:40%;"/>
+<img src="Dem_dev.jpg" style="width:40%;"/><img src="Dem_dev_reg.jpg" style="width:40%;"/>
 
 - [Code](plot_code.R)
 
