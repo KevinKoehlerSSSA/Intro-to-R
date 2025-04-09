@@ -25,3 +25,4 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 <img src="MPs_lose_touch_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_voted.jpg" style="width:50%;"/>
 <img src="Perc_dem.jpg" style="width:50%;"/><img src="Perc_dem_reg.jpg" style="width:50%;"/>
 <img src="Dem_dev.jpg" style="width:50%;"/><img src="Dem_dev_reg.jpg" style="width:50%;"/>
+- [Code](plot_code.R)
