@@ -58,3 +58,5 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 -  De Bruin, Erica. 2018. "Preventing Coups d’état: How Counterbalancing Works." *Journal of Conflict Resolution* 62 (7): 1433–58. [doi: 10.1177/0022002717692652](https://doi.org/10.1177/0022002717692652)
 -  The data are available [here](https://journals.sagepub.com/doi/abs/10.1177/0022002717692652)
 -  [Code session 9](#)
+
+### Session 10: TBD
