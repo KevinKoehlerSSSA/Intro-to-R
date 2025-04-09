@@ -11,13 +11,13 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 - [2014 Electoral Results](res2014.csv)
 - [2019 Electoral Results](res2019.csv)
 ## Slides and code files
-### Session 1
+### Session 1: Getting set up
 - [Slides session 1](Session-1.pdf)
 - [Code session 1](#)
-### Session 2
+### Session 2: Data management
 - [Slides session 2](Session-2.pdf)
 - [Electoral results from Wikipedia](Scrape-Wikipedia.R)
-### Session 3
+### Session 3: Data visualization
 - [Slides session 3](Session-3.pdf)
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 #### Plots to reproduce:
@@ -26,3 +26,10 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 <img src="Perc_dem.jpg" style="width:50%;"/><img src="Perc_dem_reg.jpg" style="width:50%;"/>
 <img src="Dem_dev.jpg" style="width:50%;"/><img src="Dem_dev_reg.jpg" style="width:50%;"/>
 - [Code](plot_code.R)
+### Session 4: R programming
+
+### Session 5: Exploring data
+
+### Session 6: Linear regression
+
+### Session 7: Replication I: U.S. Soft-Power and Foreign Policy Behavior
