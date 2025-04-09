@@ -23,3 +23,4 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 #### Plots to reproduce:
 <img src="MPs_lose_touch.jpg" style="width:50%;"/><img src="MPs_lose_touch_perc.jpg" style="width:50%;"/>
 <img src="MPs_lose_touch_gender.jpg" style="width:50%;"/><img src="MPs_lose_touch_voted.jpg" style="width:50%;"/>
+<img src="Perc_dem.jpg" style="width:50%;"/><img src="MPs_lose_touch_voted.jpg" style="width:50%;"/>
