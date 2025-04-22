@@ -40,15 +40,16 @@ The file below contains the names, constituencies, and terms of 12,992 Turkish p
 
 Here is a table with Turkish special characters and their Latin equivalents:
 
-| Turkish letter | Latin equivalent |
-|-----------------|------------------|
-| ç               | c                |
-| ş               | s                |
-| ğ               | g                |
-| i               | i                |
-| ı               | ı                |
-| ö               | o                |
-| ü               | u                |
+| Turkish Small Letter | Latin Small Equivalent | Turkish Capital Letter | Latin Capital Equivalent |
+|----------------------|------------------------|------------------------|--------------------------|
+| ç                    | c                      | Ç                      | C                        |
+| ş                    | s                      | Ş                      | S                        |
+| ğ                    | g                      | Ğ                      | G                        |
+| i                    | i                      | İ                      | I                        |
+| ı                    | ı                      | I                      | I                        |
+| ö                    | o                      | Ö                      | O                        |
+| ü                    | u                      | Ü                      | U                        |
+
 
 ### Session 5: Exploring data
 - [Slides session 5](#)
