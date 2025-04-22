@@ -45,8 +45,8 @@ Here is a table with Turkish special characters and their Latin equivalents:
 | ç                    | c                      | Ç                      | C                        |
 | ş                    | s                      | Ş                      | S                        |
 | ğ                    | g                      | Ğ                      | G                        |
-| i                    | i                      | İ                      | I                        |
-| ı                    | ı                      | I                      | I                        |
+|                      |                        | İ                      | I                        |
+| ı                    | i                      |                        |                          |
 | ö                    | o                      | Ö                      | O                        |
 | ü                    | u                      | Ü                      | U                        |
 
