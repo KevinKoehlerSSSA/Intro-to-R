@@ -37,7 +37,19 @@ The first four plots use the Tunisia survey data, the final four use the [V-Dem 
 #### Turkish MPs data
 The file below contains the names, constituencies, and terms of 12,992 Turkish politicians having served in the Turkish Grand National Assembly between the first (1922-23) and 27th (2018-22) terms. 
 - [Turkish MPs, 1st to 27th term](turkish_mps.csv)
-  
+
+Here is a table with Turkish special characters and their Latin equivalents:
+
+| Turkish letter | Latin equivalent |
+|-----------------|------------------|
+| ç               | c                |
+| ş               | s                |
+| ğ               | g                |
+| i               | i                |
+| ı               | ı                |
+| ö               | o                |
+| ü               | u                |
+
 ### Session 5: Exploring data
 - [Slides session 5](#)
 - [Code session 5](#)
