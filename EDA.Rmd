@@ -1,0 +1,1209 @@
+---
+title: "Exploratory Data Analysis"
+author: "Kevin Koehler"
+date: "2025-05-03"
+format: 
+  pdf:
+    toc: TRUE
+    number-sections: true
+    link-citations: true
+engine: knitr
+header-inlcudes: 
+  - \usepackage{minipage}
+  - \usepackage{array}
+  - \usepackage{float}
+---
+
+```{r setup, echo=F, warning=FALSE, message=FALSE}
+library(stargazer)
+library(tidyverse)
+library(patchwork)
+library(gt)
+
+tun22 <- read_csv("tunisia_survey.csv")
+
+tun22 <- tun22 %>%
+  mutate(across(everything(), ~replace(.,(is.numeric(.) & .>95),NA)))
+
+reverse_code <- function(x, min = 1, max = 5, na.threshold=90){
+  x[x > na.threshold] <- NA
+  if(min(x, na.rm = TRUE) < min | max(x, na.rm = TRUE) > max){
+    warning("Warning: input is outside the range of the scale.")
+  }
+  return((max + min) - x)
+}
+
+tun22$mps <- reverse_code(tun22$mps)
+tun22$people <- reverse_code(tun22$people)
+tun22$officials <- reverse_code(tun22$officials)
+```
+
+
+\newpage
+
+# The Tunisia survey 
+
+This document describes the Tunisia survey data and reports the results of an exploratory data analysis. The survey was fielded by [1to1 Polling](https://121polling.tn/en/) in March 2022 and included a representative sample of 1,000 Tunisians of age 18 or above. The survey included a range of items on political attitudes, voting behavior, as well as respondents' demographic background. 
+
+The [next section](#summary_stats) describes the variables included in the data set in numerical and graphical form. In the [second section](#eda), we describe the results of an Exploratory Data Analysis (EDA) on the data. The [third section](#conclusion) concludes.
+
+
+## Summary statistics {#summary_stats}
+
+The data set includes `r length(tun22)` variables with `r format(nrow(tun22), big.mark=",")` observations each. Table \ref{sum_stats} gives a first overview of the variables contained in the data set along with basic summary statistics.
+
+```{r summary_stats, echo=F, results='asis'}
+stargazer(as.data.frame(tun22), 
+          type = "latex", 
+          header = F,
+          title = "Variables and summary statistics",
+          label = "sum_stats")
+```
+
+## Descriptive statistics
+
+In this section, we present descriptive statistics for all variables included in the data set. 
+
+```{r plots, echo=F, warning=F, message=F}
+female <- tun22 %>%
+  mutate(female=factor(female,
+                       levels = c(0,1),
+                       labels = c("female","male"))) %>%
+  group_by(female) %>%
+  summarize(n=n(), .groups = "drop") %>%
+  mutate(perc=n/sum(n)) %>%
+  ggplot(aes(x=female,y=perc)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_bar(stat="identity") +
+  labs(
+    x="",
+    y="",
+    title=""
+  ) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="white") +
+  theme_classic() 
+
+ggsave("female.png", plot=female, height = 2, width = 2)
+
+
+age <- ggplot(tun22,
+              aes(x=age)) +
+  geom_density() +
+  stat_function(fun = dnorm, 
+                args = list(mean = mean(tun22$age, na.rm=T), 
+                            sd = sd(tun22$age, na.rm=T)), 
+                color = "red", linewidth = 0.5) +  
+  labs(
+    x="",
+    y="",
+    title=""
+  ) +
+  theme_classic()
+ggsave("age.png", plot=age, height = 2, width = 2)
+
+edu <- tun22 %>%
+  group_by(edu) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(
+    perc = (n / sum(n)),
+    edu = factor(edu,
+                    levels = 1:8,
+                    labels = c("No formal education", 
+                               "Elementary", 
+                               "Basic", 
+                               "Secondary", 
+                               "Some university",
+                               "Vocational",
+                               "BA",
+                               "MA or above"),
+                    ordered = TRUE)) %>%
+  ggplot(aes(x = edu, y = perc, fill = edu)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="black", size=2) +
+  scale_fill_brewer(palette = 2, na.value = "gray80") +
+  labs(title = "",
+       x = " ", y = " ") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1),
+        legend.position = "none")
+ggsave("edu.png", plot=edu, height = 3, width = 3)
+
+
+inc <- tun22 %>%
+  group_by(income) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(
+    perc = (n / sum(n)),
+    income = factor(income,
+                    levels = 1:8,
+                    labels = c("No income", 
+                               "Less than 500 TND", 
+                               "500-999 TND", 
+                               "1000-1499 TND", 
+                               "1500-1999 TND",
+                               "2000-2499 TND",
+                               "2500-2999 TND",
+                               "3000 TND and more"),
+                    ordered = TRUE)) %>%
+  ggplot(aes(x = income, y = perc, fill = income)) +
+  scale_fill_brewer(palette = 2, na.value = "gray80") +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="black", size=2) +
+  labs(title = "",
+       x = " ", y = " ") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1),
+        legend.position = "none")
+ggsave("income.png", plot=inc, height = 3, width = 3)
+
+
+region <- tun22 %>% 
+  group_by(region) %>%
+  summarize(n = n(), .groups = "drop") %>%
+  mutate(perc=n/sum(n)) %>%
+  ggplot(aes(x = reorder(region,-perc), y = perc)) +
+  geom_bar(stat = "identity", fill="steelblue") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="white", size=2) +
+  labs(x="",
+       y="",
+       title="") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1)) 
+
+ggsave("region.png", plot=region, height = 3, width = 6)
+
+jul25 <- tun22 %>% 
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)) %>%
+  count(sup_july25) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = sup_july25, y = percent, fill = sup_july25)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label),
+            vjust = 1.5, color="white", size=3) +
+  scale_fill_manual(values = c("oppose" = "red",
+                                "support" = "darkgreen", 
+                                "NA" = "gray")) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, size=7, hjust = 1))
+ggsave("jul25.png", plot=jul25, height = 3, width = 3)
+
+
+mps <- tun22 %>%
+  group_by(mps) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(
+    perc = n / sum(n),
+    mps = factor(mps,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    mps = forcats::fct_rev(mps)) %>%
+  ggplot(aes(x = mps, y = perc, fill = mps)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="white", size=2) +
+  labs(title = "",
+       x = " ", y = " ") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1),
+        legend.position = "none")
+ggsave("mps.png", plot=mps, height = 3, width = 3)
+
+people <- tun22 %>%
+  group_by(people) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(
+    perc = n / sum(n),
+    people = factor(people,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    people = forcats::fct_rev(people)) %>%
+  ggplot(aes(x = people, y = perc, fill = people)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="white", size=2) +
+  labs(title = "",
+       x = " ", y = " ") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1),
+        legend.position = "none")
+ggsave("people.png", plot=people, height = 3, width = 3)
+
+officials <- tun22 %>%
+  group_by(officials) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(
+    perc = n / sum(n),
+    officials = factor(officials,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    officials = forcats::fct_rev(officials)) %>%
+  ggplot(aes(x = officials, y = perc, fill = officials)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  geom_text(aes(label = round(perc*100,2)), 
+            vjust = 1.5, color="white", size=2) +
+  labs(title = "",
+       x = " ", y = " ") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size=7, hjust = 1),
+        legend.position = "none")
+ggsave("officials.png", plot=officials, height = 3, width = 3)
+
+l2019v <- tun22 %>% 
+  mutate(voted_leg=
+           case_when(
+             leg2019_voted==1~"yes",
+             leg2019_voted==2~"no",
+             TRUE~NA)) %>%
+  count(voted_leg) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = voted_leg, y = percent, fill = voted_leg)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label),
+            vjust = 1.5, color="white") +
+  scale_fill_manual(values = c("no" = "red",
+                                "yes" = "darkgreen", 
+                                "NA" = "gray")) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  theme(legend.position = "none")
+ggsave("l2019v.png", plot=l2019v, height = 3, width = 3)
+
+l2019 <- tun22 %>% 
+  mutate(leg2019=
+           case_when(
+             leg2019==1~"Ennahda",
+             leg2019==2~"Qalb Tounes",
+             leg2019==3~"PDL",
+             leg2019==4~"DC",
+             leg2019==5~"Karama",
+             leg2019==6~"People's Movement",
+             leg2019==7~"Tahya Tounes",
+             TRUE~NA)) %>%
+  count(leg2019) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = reorder(leg2019,percent), y = percent)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label), hjust=-0.05,color="black", size=3) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  ylim(0,95) +
+  theme_classic() +
+  coord_flip()
+ggsave("l2019.png", plot=l2019, height = 4, width = 3)
+
+p2019v1 <- tun22 %>% 
+  mutate(pres_1_voted=
+           case_when(
+             pres2019_1_voted==1~"yes",
+             pres2019_1_voted==2~"no",
+             TRUE~NA)) %>%
+  count(pres_1_voted) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = pres_1_voted, y = percent, fill = pres_1_voted)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label),
+            vjust = 1.5, color="white") +
+  scale_fill_manual(values = c("no" = "red",
+                                "yes" = "darkgreen", 
+                                "NA" = "gray")) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  theme(legend.position = "none")
+ggsave("p2019v1.png", plot=p2019v1, height = 3, width = 3)
+
+p2019_1 <- tun22 %>% 
+  mutate(pres2019_1=
+           case_when(
+             pres2019_1==1~"Kais Saied",
+             pres2019_1==2~"Nabil Karoui",
+             pres2019_1==3~"Abdelfattah Mourou",
+             pres2019_1==4~"Abdelkrim Zbidi",
+             pres2019_1==5~"Youssef Chahed",
+             pres2019_1==6~"Safi Saeid",
+             pres2019_1==7~"Lotfi Mraihi",
+             pres2019_1==8~"Saifeddine Makhlouf",
+             pres2019_1==9~"Abir Moussi",
+             pres2019_1==10~"Mohamed Abbou",
+             pres2019_1==11~"Moncef Marzouki",
+             TRUE~NA)) %>%
+  count(pres2019_1) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = reorder(pres2019_1,percent), y = percent)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label), hjust=-0.05,color="black", size=3) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  ylim(0,75) +
+  coord_flip()
+ggsave("p2019_1.png", plot=p2019_1, height = 3, width = 3)
+
+p2019v2 <- tun22 %>% 
+  mutate(pres_2_voted=
+           case_when(
+             pres2019_2_voted==1~"yes",
+             pres2019_2_voted==2~"no",
+             TRUE~NA)) %>%
+  count(pres_2_voted) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = pres_2_voted, y = percent, fill = pres_2_voted)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label),
+            vjust = 1.5, color="white") +
+  scale_fill_manual(values = c("no" = "red",
+                                "yes" = "darkgreen", 
+                                "NA" = "gray")) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  theme(legend.position = "none")
+ggsave("p2019v2.png", plot=p2019v2, height = 3, width = 3)
+
+
+p2019_2 <- tun22 %>% 
+  mutate(pres2019_2=
+           case_when(
+             pres2019_2==1~"Kais Saied",
+             pres2019_2==2~"Nabil Karoui",
+             TRUE~NA)) %>%
+  count(pres2019_2) %>%
+  mutate(percent=n/sum(n)*100,
+         label=paste0(round(percent,2),"%")) %>%
+  ggplot(aes(x = reorder(pres2019_2,percent), y = percent)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = label), hjust=-0.05,color="black", size=3) +
+  labs(
+    y = "Percent",
+    x = "",
+    title = ""
+  ) +
+  theme_classic() +
+  ylim(0,75) +
+  coord_flip()
+ggsave("p2019_2.png", plot=p2019_2, height = 3, width = 3)
+
+
+#plots <- (female | age | edu | inc) / 
+#  region / 
+#  (jul25 | mps | people | officials) /
+#  (l2019v | l2019) /
+#  (p2019v1 | p2019_1) /
+#  (p2019v2 | p2019_2)
+#plots + plot_annotation(
+#  title = "Summary plots"
+#)
+```
+
+### Gender (`female`)
+
+\begin{minipage}[c]{0.55\textwidth}
+The variable is coded 0 for male and 1 for female.  
+There are `r sum(is.na(tun22$female))` missing values.
+
+\smallskip
+
+The sample is almost perfectly balanced in gender terms. 
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{female.png}
+\end{minipage}
+
+---
+
+### Age (`age`)
+
+\begin{minipage}[c]{0.55\textwidth}
+The variable records respondents' age in years.  
+There are `r sum(is.na(tun22$age))` missing values. The mean is `r round(mean(tun22$age, na.rm=T),2)` and the standard deviation `r round(sd(tun22$age, na.rm=T),2)`, the variable varies between `r round(min(tun22$age, na.rm=T),2)` and `r round(max(tun22$age, na.rm=T),2)`.
+
+\smallskip
+
+The density plot on the right also shows a normal distribution with identical mean and standard deviation (in \textcolor{red}{red}). The distribution of age does not seem to be extremely skewed. 
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{age.png}
+\end{minipage}
+
+---
+
+### Education (`edu`)
+
+\begin{minipage}[c]{0.55\textwidth}
+The variable records respondents' education levels:
+
+\smallskip
+
+1 = Illiterate/no formal education \newline
+2 = Elementary education  \newline
+3 = Basic education  \newline
+4 = Secondary education  \newline
+5 = Some university  \newline
+6 = Vocational  \newline
+7 = BA degree  \newline
+8 = MA and above
+
+\smallskip
+
+There are `r sum(is.na(tun22$edu))` missing values.
+
+\smallskip
+
+The most frequent level of education is secondary education, about one-fifth of respondents completed university.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{edu.png}
+\end{minipage}
+
+---
+
+### Income (`income`)
+
+\begin{minipage}[c]{0.55\textwidth}
+The variable records respondents' income in these brackets:
+
+\smallskip
+
+1 = No current income\newline  
+2 = Less than 500 TND  \newline
+3 = 500–999 TND  \newline
+4 = 1000–1499 TND  \newline
+5 = 1500–1999 TND  \newline
+6 = 2000–2499 TND  \newline
+7 = 2500–2999 TND  \newline
+8 = 3000 TND and more
+
+\smallskip
+
+There are `r sum(is.na(tun22$income))` missing values.
+
+\smallskip
+
+More than half report monthly incomes below 1,000 TND (approx. 308 EUR at the time of the survey).
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{income.png}
+\end{minipage}
+
+### Region (`region`)
+
+\begin{minipage}[c]{0.2\textwidth}
+Province of residence
+\smallskip
+
+There are `r sum(is.na(tun22$region))` missing values.
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.75\textwidth}
+\includegraphics[width=\linewidth]{region.png}
+\end{minipage}
+
+---
+
+### July 25 Events (`july25`)
+
+\begin{minipage}[c]{0.55\textwidth}
+What statement best characterizes the July 25 events in Tunisia?
+
+\smallskip
+
+1 = They represent a necessary correction to Tunisia’s democratic transition\newline
+2 = They undermine the democratic transition\newline
+98 = Don't know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$july25))` missing values. More than 60\% of respondents think July 25th threatens the democratic transition.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{jul25.png}
+\end{minipage}
+
+---
+
+### Members of Parliament (`mps`)
+
+\begin{minipage}[c]{0.55\textwidth}
+``Members of Parliament very quickly lose touch with ordinary people after they assume office."
+
+\smallskip
+
+1 = Agree Strongly\newline
+2 = Agree Somewhat\newline
+3 = Neither agree nor disagree\newline
+4 = Disagree Somewhat\newline
+5 = Disagree Strongly\newline
+98 = Don’t Know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$mps))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{mps.png}
+\end{minipage}
+
+---
+
+### People Over Politicians (`people`)
+
+\begin{minipage}[c]{0.55\textwidth}
+``The people, not politicians, should make the most important policy decisions."
+
+\smallskip
+
+1 = Agree Strongly\newline
+2 = Agree Somewhat\newline
+3 = Neither agree nor disagree\newline
+4 = Disagree Somewhat\newline
+5 = Disagree Strongly\newline
+98 = Don’t Know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$people))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{people.png}
+\end{minipage}
+
+---
+
+### Elected Officials (`officials`)
+
+\begin{minipage}[c]{0.55\textwidth}
+``Elected officials talk too much and take too little action."
+
+\smallskip
+
+1 = Agree Strongly\newline
+2 = Agree Somewhat\newline
+3 = Neither agree nor disagree\newline
+4 = Disagree Somewhat\newline
+5 = Disagree Strongly\newline
+98 = Don’t Know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$officials))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{officials.png}
+\end{minipage}
+
+---
+
+### Voted in 2019 Parliamentary Elections (`leg2019_voted`)
+
+\begin{minipage}[c]{0.55\textwidth}
+Did you vote in the 2019 parliamentary elections?
+
+\smallskip
+
+1 = Yes\newline
+2 = No\newline
+98 = Don't remember\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$leg2019_voted))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{l2019v.png}
+\end{minipage}
+
+---
+
+### Vote in 2019 Parliamentary Elections (`leg2019`)
+
+\begin{minipage}[c]{0.55\textwidth}
+If yes, for which political party did you vote?
+
+\smallskip
+
+1 = Ennahda\newline
+2 = Qalb Tunis\newline
+3 = Free Destourian Party\newline
+4 = Democratic Current\newline
+5 = Karama\newline
+6 = People’s Movement\newline
+7 = Tahya Tunis\newline
+96 = Other\newline
+97 = Blank or invalid ballot\newline
+98 = Don’t know / don’t remember\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$leg2019))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{l2019.png}
+\end{minipage}
+
+---
+
+### Voted in 2019 Presidential Elections, First Round (`pres2019_1_voted`)
+
+\begin{minipage}[c]{0.55\textwidth}
+Did you vote in the 2019 presidential elections (first round)?
+
+\smallskip
+
+1 = Yes\newline
+2 = No\newline
+98 = Don't know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$pres2019_1_voted))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{p2019v1.png}
+\end{minipage}
+
+---
+
+### Vote in 2019 Presidential Elections, First Round (`pres2019_1`)
+
+\begin{minipage}[c]{0.55\textwidth}
+If yes, for which candidate did you vote?
+
+\smallskip
+
+1 = Kais Saied\newline
+2 = Nabil Karoui\newline
+3 = Abdelfattah Mourou\newline
+4 = Abdelkrim Zbidi\newline
+5 = Youssef Chahed\newline
+6 = Safi Saied\newline
+7 = Lotfi Mraihi\newline
+8 = Saifeddine Makhlouf\newline
+9 = Abir Moussi\newline
+10 = Mohammed Abbou\newline
+11 = Moncef Marzouki\newline
+96 = Other\newline
+97 = Blank or invalid ballot\newline
+98 = Don’t know / don’t remember\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$pres2019_1))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{p2019_1.png}
+\end{minipage}
+
+---
+
+### Voted in 2019 Presidential Elections, Second Round (`pres2019_2_voted`)
+
+\begin{minipage}[c]{0.55\textwidth}
+Did you vote in the 2019 presidential elections (second round)?
+
+\smallskip
+
+1 = Yes\newline
+2 = No\newline
+98 = Don't know\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$pres2019_2_voted))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{p2019v2.png}
+\end{minipage}
+
+---
+
+### Vote in 2019 Presidential Elections, Second Round (`pres2019_2`)
+
+\begin{minipage}[c]{0.55\textwidth}
+If yes, for which candidate did you vote?
+
+\smallskip
+
+1 = Kais Saied\newline
+2 = Nabil Karoui\newline
+97 = Blank or invalid ballot\newline
+98 = Don’t know / don’t remember\newline
+99 = Declined to answer
+
+\smallskip
+
+There are `r sum(is.na(tun22$pres2019_2))` missing values.
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width=\linewidth]{p2019_2.png}
+\end{minipage}
+
+
+# Exploratory Data Analysis {#eda}
+
+In this section, we perform an exploratory data analysis and report the results. We focus in particular on potential explanations for support for (or opposition against) July 25th. We explore potential relationships between age and education, the three populism measures, and voting behavior on the one hand, and attitudes toward July 25th on the other. In each case, we first graph the relationship before we run the appropriate statistical test.
+
+## July 25th and gender
+
+```{r gender_july_plot, echo=FALSE, warning=F, message=F, fig.height=2, fig.align='center', fig.width=3, fig.cap="Support for July 25th by gender \\label{fig:genderjuly}"}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         ) 
+tun22 %>% 
+  mutate(female=factor(female,
+                       levels = c(0,1),
+                       labels = c("female","male"))) %>%
+  group_by(sup_july25, female) %>%
+  summarise(n=n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    perc = n / sum(n)) %>%
+  ggplot(aes(x = female, 
+             y = perc, 
+             fill = sup_july25)) +
+  geom_bar(stat="identity", position="fill") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    values = c(
+      "oppose" = "red",
+      "support" = "darkgreen",
+      "NA" = "gray"
+    )
+  ) +
+  labs(
+    x="",
+    y="",
+    fill="July 25th"
+  ) +
+  theme_classic() 
+```
+Visually, there does not seem to be a relationship between gender and attitudes toward July 25th. We can formally test this by looking at the contingency table: 
+
+```{r contingency_table, echo=F, results='asis'}
+table <- as.data.frame(table(tun22$female, tun22$sup_july25))
+names(table) <- c("female","July 25","n")
+stargazer(table, 
+          type = "latex", 
+          title="Contingency table of gender and July 25th",
+          summary = FALSE,
+          header = FALSE, 
+          rownames = FALSE,
+          label = "contingency")
+```
+
+```{r chi-sq, echo=FALSE}
+table <- table(tun22$female, tun22$sup_july25)
+chi <- chisq.test(table)
+```
+
+Table \ref{contingency} suggests that there is no relationship. This is confirmed by a $\chi^2$ test as well. The p-value from the $\chi^2$ test is `r chi$p.value`, indicating no significant relationship.
+
+## July 25th and age
+
+```{r age_july_plot, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th by age \\label{fig:agejuly}"}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+ggplot(tun22, aes(x = age, 
+                  y = sup_july25, 
+                  fill = sup_july25)) +
+  geom_boxplot() +
+  scale_fill_manual(
+    values = c(
+      "oppose" = "red",
+      "support" = "darkgreen",
+      "NA" = "gray"
+    )
+  ) +
+  ylab("") +
+  xlab("Age") +
+  theme_classic() +
+  theme(legend.position = "none")
+
+ttest <- t.test(age~sup_july25, 
+                data=tun22)
+```
+
+Figure \ref{fig:agejuly} suggests that there indeed might be a relationship such that older respondents are more likely to see July 25th as weakening the democratic transition. This is confirmed by a formal t-test: The average age of supporters of July 25th is `r round(ttest$estimate[2],2)`, while the average age of opponents is `r round(ttest$estimate[1],2)` (the difference is significant with `r round(ttest$p.value,6)`).
+
+## July 25th and education
+
+```{r edu_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th by education \\label{fig:edujuly}"}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+tun22 %>%
+  filter(!is.na(edu)) %>%
+  group_by(edu, sup_july25) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    prop = n / sum(n),
+    edu = factor(edu,
+                    levels = 1:8,
+                    labels = c("Illiterate", 
+                               "Elementary", 
+                               "Basic", 
+                               "Secondary", 
+                               "Some uni",
+                               "Vocational",
+                               "BA",
+                               "MA"),
+                    ordered = TRUE),
+    edu = forcats::fct_rev(edu)) %>%
+  ggplot(aes(x = sup_july25, y = prop, fill = edu)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_brewer(palette = 2, na.value = "gray80") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "",
+       x = " ", y = " ", fill = "Education") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+```
+```{r edujuly_test, echo=F}
+edujuly_test <- wilcox.test(tun22$edu~tun22$sup_july25)
+```
+
+There might be a difference based on Figure \ref{fig:edujuly}. A Wilcoxon test reveals that there is none, however (p=`r round(edujuly_test$p.value,4)`). 
+
+## July 25th and income
+
+```{r inc_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th by income \\label{fig:incjuly}", fig.pos='H'}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+tun22 %>%
+  group_by(income, sup_july25) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    prop = n / sum(n),
+    inc = factor(income,
+                    levels = 1:8,
+                    labels = c("No income", 
+                               "Less than 500", 
+                               "500-999", 
+                               "1000-1499", 
+                               "1500-1999",
+                               "2000-2499",
+                               "2500-2999",
+                               "3000 or more"),
+                    ordered = TRUE),
+    inc = forcats::fct_rev(inc)) %>%
+  ggplot(aes(x = sup_july25, y = prop, fill = inc)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_brewer(palette = 2, na.value = "gray80") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "",
+       x = " ", y = " ", fill = "Income") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+```
+```{r incjuly_test, echo=F}
+incjuly_test <- wilcox.test(tun22$income~tun22$sup_july25)
+```
+
+Figure \ref{fig:incjuly} does not suggest a relationship, a Wilcoxon test confirms this impression (p=`r round(incjuly_test$p.value,4)`). 
+
+## July 25th and region
+
+```{r reg_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=6, fig.cap="Support for July 25th by region \\label{fig:regjuly}", fig.pos='H'}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+region_order <- tun22 %>%
+  group_by(region, sup_july25) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(region) %>%
+  mutate(perc = n / sum(n)) %>%
+  filter(sup_july25 == "support") %>%
+  arrange(desc(perc)) %>%
+  pull(region)
+
+tun22 %>%
+  group_by(region, sup_july25) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(region) %>%
+  mutate(perc = n / sum(n)) %>%
+  mutate(region = factor(region, levels = region_order)) %>%
+  ggplot(aes(x = region, y = perc, fill = sup_july25)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    values = c("oppose" = "red", "support" = "darkgreen")
+  ) +
+  labs(x = "", y = "", title = "", fill = "July 25th") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1))
+
+```
+```{r regjuly_test, echo=F, warning=FALSE}
+table_region_support <- table(tun22$region, tun22$sup_july25)
+
+regjul_test <- chisq.test(table_region_support)
+```
+
+There is a relationship between region and support for July 25th (p=`r round(regjul_test$p.value,4)` in a $\chi^2$-test).
+
+## July 25th and ``MPs lose touch"
+
+```{r mps_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th and MPs lose touch \\label{fig:mpsjuly}", fig.pos='H'}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+tun22 %>%
+  filter(!is.na(sup_july25) & !is.na(mps)) %>%
+  group_by(sup_july25, mps) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    prop = n / sum(n),
+    mps = factor(mps,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    mps = forcats::fct_rev(mps)) %>%
+  ggplot(aes(x = sup_july25, y = prop, fill = mps)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = " ",
+       x = " ", y = " ", fill = "Response") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1))
+```
+
+```{r w_test, echo=F}
+w_test <- wilcox.test(mps~sup_july25,
+                      data=tun22,
+                      exact=FALSE)
+```
+
+We can conclude that the difference in Figure \ref{fig:mpsjuly} is significant with p = `r round(w_test$p.value,4)`.  
+
+## July 25th and ``People should make decisions"
+
+```{r people_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th and people should make decisions \\label{fig:peoplejuly}", fig.pos='H'}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+tun22 %>%
+  filter(!is.na(sup_july25) & !is.na(people)) %>%
+  group_by(sup_july25, people) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    prop = n / sum(n),
+    people = factor(people,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    people = forcats::fct_rev(people)) %>%
+  ggplot(aes(x = sup_july25, y = prop, fill = people)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = " ",
+       x = " ", y = " ", fill = "Response") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1))
+```
+
+```{r w_test_people, echo=F}
+w_test <- wilcox.test(people~sup_july25,
+                      data=tun22,
+                      exact=FALSE)
+```
+
+We can conclude that the difference in Figure \ref{fig:peoplejuly} is significant with p = `r round(w_test$p.value,4)`.  
+
+## July 25th and ``Officials talk too much"
+
+```{r officials_july, echo=FALSE, warning=F, message=F, fig.height=3, fig.align='center', fig.width=3, fig.cap="Support for July 25th and officials talk too much \\label{fig:officialsjuly}", fig.pos='H'}
+tun22 <- tun22 %>%
+  mutate(sup_july25=
+           case_when(
+             july25==1~"oppose",
+             july25==2~"support",
+             TRUE~NA)
+         )
+tun22 %>%
+  filter(!is.na(sup_july25) & !is.na(officials)) %>%
+  group_by(sup_july25, officials) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(sup_july25) %>%
+  mutate(
+    prop = n / sum(n),
+    officials = factor(officials,
+                    levels = 1:5,
+                    labels = c("Disagree strongly", 
+                               "Disagree", 
+                               "Neutral", 
+                               "Agree", 
+                               "Agree strongly"),
+                    ordered = TRUE),
+    officials = forcats::fct_rev(officials)) %>%
+  ggplot(aes(x = sup_july25, y = prop, fill = officials)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(values = c("#1a9850","#4ee44e",
+                               "#808080","#ff0000",
+                               "#8b0000")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = " ",
+       x = " ", y = " ", fill = "Response") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1))
+```
+
+```{r w_test_officials, echo=F}
+w_test <- wilcox.test(officials~sup_july25,
+                      data=tun22,
+                      exact=FALSE)
+```
+
+We can conclude that the difference in Figure \ref{fig:officialsjuly} is significant with p = `r round(w_test$p.value,4)`.  
+
+
+# Conclusion {#conclusion}
