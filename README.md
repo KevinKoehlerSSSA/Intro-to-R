@@ -53,6 +53,11 @@ Here is a table with Turkish special characters and their Latin equivalents:
 
 ### Session 5: Exploring data
 - [Slides session 5](Session-5.pdf)
+
+#### Reporting with markdown
+
+If you want to learn more about how you can use R to systematically report your research results, you can consult the two documents below. The first is code written in R markdown which produces a report on an exploratory data analysis on the Tunisia survey. The second is the PDF version of the report. Here you can find an [R markdown cheat sheet](https://github.com/rstudio/cheatsheets/raw/main/rmarkdown-2.0.pdf) with further details. There is also a useful [tutorial](https://rmarkdown.rstudio.com/lesson-1.html) which walks you through the main features of R markdown as a document preparation system.  
+
 - [Markdown code EDA](EDA.Rmd)
 - [EDA report (PDF version)](EDA.pdf)
   
