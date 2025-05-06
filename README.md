@@ -52,8 +52,9 @@ Here is a table with Turkish special characters and their Latin equivalents:
 
 
 ### Session 5: Exploring data
-- [Slides session 5](#)
-- [Code session 5](#)
+- [Slides session 5](Session-5.pdf)
+- [Markdown code EDA](EDA.Rmd)
+- [EDA report (PDF version)](EDA.pdf)
   
 ### Session 6: Linear regression
 - [Slides session 6](#)
