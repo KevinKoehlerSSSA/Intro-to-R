@@ -1,0 +1,452 @@
+---
+title: "Replication I: US Soft Power and Foreign Policy Behavior"
+author: "Data Analysis in \\textsf{R}"  
+date: "2025-05-14"
+format: 
+  pdf:
+    latex-engine: xelatex
+    number-sections: true
+    toc: true
+    lot: true
+    lof: true
+engine: knitr
+bibliography: references.bib
+csl: chicago-author-date.csl
+header-includes:
+  - \renewcommand{\arraystretch}{1}
+  - \usepackage{makecell}
+---
+
+\newpage
+# Introduction {#Intro}
+
+Does US soft-power matter for the foreign policy behavior of other states? In particular, are states whose population hold positive views of US foreign policy  more likely to adopt foreign policy decisions in line with US preferences? In their article \textit{In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?}, @goldsmith2012 examine this question. They build on the influential notion of *soft power* developed by Joseph @nye2004,^[Note that Joseph Nye passed away on 6 May 2025.] but further develop Nye's theory to derive testable hypotheses on the effects of public opinion on specific foreign policy decisions. 
+
+In this document, we replicate the OLS-based analyses in @goldsmith2012, focusing in particular on the descriptive analysis in Tables 1 and 2 (pp. 572-73), the OLS models in Table 3 (Models 5 and 6, p. 576), as well as the marginal effects plots for these models (Panel 3 in Figure 2, p. 577). 
+
+This report is structured as follows. Section \ref{hypo} briefly reports the two hypotheses developed in @goldsmith2012. Section \ref{data} describes the data (available [here](https://github.com/joshuaalley/cross-sectional-ols/tree/master/goldsmith-horiuchi-2012)). This section also constructs necessary variables (Section \ref{vars}) and reproduces the descriptive analysis in Tables 1 and 2 of the original article (Section \ref{descr}). Section \ref{ols} estimates the OLS regression models in Table 3 and plots marginal effects for the regression models (Section \ref{marg}). In Section \ref{concl}, we conclude by summarizing the results of our replication.
+
+# The hypotheses {#hypo}
+
+@goldsmith2012 criticize classical soft power theory [@nye2004] for being underspecified. In particular, they claim that the causal mechanisms linking the ``currencies of soft power"--specifically the foreign public's affinity for American values, culture, and institutions [@nye2004]--to actual foreign policy outcomes are unclear [@goldsmith2012, 556]. They thus propose to see these as underlying structural factors which shape the way in which foreign publics form *views about current US foreign policy* [@goldsmith2012, 558]. This is their core independent variable. 
+
+@goldsmith2012 formulate two hypotheses. First, they hypothesize that 
+
+Hypothesis 1: "**[p]ublic opinion about US foreign policy in other countries affects the foreign policies of those countries toward the US**" [@goldsmith2012, 560].
+
+and that 
+
+Hypothesis 2: "**[t]he effect of public opinion about US foreign policy in other countries on foreign policy decisions relevant for the US will be most evident when the issue at stake is salient for the mass publics in the those countries**" [@goldsmith2012, 560-61].
+
+# The data {#data}
+
+
+```{r data, echo=F, message=FALSE, warning=FALSE, results='asis'}
+library(tidyverse)
+library(haven)
+library(stargazer)
+
+data <- read_dta("/Users/kevin/Dropbox (Personal)/Sant\'Anna/Teaching/2025 - 1 - Data Analysis in R/data_2011-07-26.dta")
+```
+
+The data are available as a STATA `.dta` file on [GitHub](https://github.com/joshuaalley/cross-sectional-ols/blob/master/goldsmith-horiuchi-2012/data_2011-07-26.dta). I downloaded the data set (called `data_2011-07-26.dta`) and read it into \textsf{R} using the `read_dta()` function from the `haven` package. The data set has `r length(data)` variables with `r nrow(data)` observations. Table 1 lists all variables and presents summary statistics (note that non-numerical variables are excluded).
+
+```{r summary_stats, echo=F, results='asis', warning=FALSE, message=FALSE}
+library(psych)
+library(knitr)
+library(kableExtra)
+
+sumstats <- data %>%
+  select(-country, -iso3166) %>%
+  describe() %>%
+  select(n, mean, sd, min, max) %>%
+  mutate(mean=round(mean,2),
+         sd=round(sd,2),
+         min=round(min,2),
+         max=round(max,2))
+
+kable(sumstats, 
+      format = "latex", 
+      longtable = TRUE, 
+      booktabs = TRUE,
+      caption = "Summary statistics", label = "tab:sum_stats") %>%
+  kable_styling(latex_options = c("repeat_header", 
+                                  "striped",
+                                  "condensed"))
+```
+
+While there is no formal codebook, the variable names and descriptive statistics, together with the description of variables in the article give a fairly clear picture of what most variables are. 
+
+- `ccode` is the [Correlates of War country code](https://correlatesofwar.org/cow-country-codes/), an arbitrary numerical code assigned to countries;
+- `nonnat1`, `nonnat2`, and `nonnat3` appear to be indicator variables for whether the survey in question employed a non-national (i.e., urban) sample;
+- `pos1`, `pos2`, and `pos3` are the percentage of respondents expressing positive views on US foreign policy; 
+- `neg1`, `neg2`, and `neg3` are the percentage of respondents expressing negative views on US foreign policy; 
+- `troops_iraq` is the number of troops committed to Iraq by a country;
+- `article98` is an indicator variable code 1 if a country signed an agreement with the US exempting US personnel from the jurisdiction of the ICC [@goldsmith2012, 568]; 
+- `unvoting` is the proportion of important UNGA resolutions in 2003 on which the country voted the same as the US [@goldsmith2012, 570];
+- `troops_afgh` is a control variable with the number of troops committed to Afghanistan;
+- `icc` records whether a country has signed the Rome statute establishing the ICC;
+- `s_lead` likely is the "alliance portfolio" control variable [@goldsmith2012, 575];
+- `nato` is an indicator variable for NATO membership;
+- `aid_m` and `aid_e` is the per capita amount of US military and economic aid to a country in 2002 [@goldsmith2012, 575];
+- `lntrade` is the natural logarithm of the total trade volume with the US divided by GDP [@goldsmith2012, 575];
+- `lngdppc` is the natural logarith of GDP/capita;
+- `pr` and `cl` are the [Freedom House](https://freedomhouse.org/) political rights and civil liberty scores, respectively; 
+- `muslimpct` is the ratio of Muslims to the total population;
+- `europe` is an indicator for whether the country is in Western Europe [@goldsmith2012, 575];
+- `keep` is unclear (but seems to be an internal variable which is, in fact, constant at 1).
+
+
+## Variable construction {#vars}
+
+The main independent variable needs to be constructed. @goldsmith2012 describe it as the "difference between the aggregated (in ratio) positive and negative response" [@goldsmith2012, 563] to the survey item:
+
+> Generally, do you think American foreign policy has a positive effect on \<your country\>, a negative effect or does American foreign policy
+have no effect on \<your country\>? [@goldsmith2012, 563]
+
+```{r iv, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data %>%
+  mutate(
+    positive=rowMeans(cbind(pos1, pos2, pos3), na.rm = T),
+    negative=rowMeans(cbind(neg1, neg2, neg3), na.rm = T),
+    fp_views=(positive-negative)/100,
+    iraq_dummy=ifelse(troops_iraq>0,1,0),
+    afg_dummy=ifelse(troops_afgh>0,1,0),
+    fh=pr+cl,
+    nonnat=ifelse(nonnat1+nonnat2+nonnat3>0,1,0)
+  )
+```
+
+I call this main independent variable of interest `fp_views`. It has a mean of `r round(mean(data$fp_views, na.rm=T),2)`, a standard deviation of `r round(sd(data$fp_views, na.rm=T),2)`, and ranges from `r round(min(data$fp_views, na.rm=T),2)` to `r round(max(data$fp_views, na.rm=T),2)`. This is consistent with Tables 1 and 2 in the article [@goldsmith2012, 572-73], suggesting that the variable was constructed correctly.
+
+We also need an indicator variable coded 0 if a country did not send troops to Iraq and 1 otherwise (`iraq_dummy`), and the same for troops committeed to Afghanistan (`afg_dummy`). There are `r sum(data$iraq_dummy, na.rm=T)` countries which sent troops to Iraq and `r sum(data$afg_dummy, na.rm=T)` which committed troops to Afghanistan. We also combine the two Freedom House scores to create a new variable (`fh`). This variable has a mean of `r round(mean(data$fh, na.rm=T),2)`, a standard deviation of `r round(sd(data$fh, na.rm=T),2)`, and ranges from `r round(min(data$fh, na.rm=T),2)` to `r round(max(data$fh, na.rm=T),2)`. Finally, we create a `nonnat` variable which is 1 if any of the three surveys going into the `fp_views` variable employed a non-national sample. `r round(mean(data$nonnat, na.rm=T),4)*100`\% of all countries include at least one non-national sample. 
+
+## Descriptive analysis {#descr}
+
+@goldsmith2012 begin their analysis with a descriptive comparison of their main variables of interest across two groups of countries, classified by their values on the `fp_views` variable. We reproduce these tables here.
+
+```{r descriptive_tables, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+#options(kableExtra.latex.load_packages = FALSE)
+
+tables <- data %>%
+  filter(!is.na(fp_views)) %>%
+  select(country, fp_views, iraq_dummy, article98, unvoting) %>%
+  mutate(fp_views=round(fp_views, 3),
+         unvoting=round(unvoting/100, 3))
+
+table1 <- tables %>%
+  filter(fp_views<median(fp_views, na.rm=T)) %>%
+  arrange(fp_views) 
+
+table1 <- rbind(table1,
+                c("Mean",
+                  round(mean(table1$fp_views),3),
+                  round(mean(table1$iraq_dummy),3),
+                  round(mean(table1$article98),3),
+                  round(mean(table1$unvoting),3)))
+
+table1 <- rbind(table1,
+                c("St. Dev.",
+                  round(sd(table1$fp_views),3),
+                  round(sd(table1$iraq_dummy),3),
+                  round(sd(table1$article98),3),
+                  round(sd(table1$unvoting),3)))
+
+table1[, -1] <- lapply(table1[, -1], as.numeric)
+
+table1 <- table1 %>%
+  mutate(
+    fp_views = round(fp_views, 3),
+    iraq_dummy = ifelse(country %in% c("Mean", "St. Dev."),
+                        iraq_dummy,
+                        round(iraq_dummy, 0)),
+    article98 = ifelse(country %in% c("Mean", "St. Dev."),
+                       article98,
+                       round(article98, 0)),
+    unvoting = round(unvoting, 3)
+  )
+
+table2 <- tables %>%
+  filter(fp_views>median(fp_views, na.rm=T)) %>%
+  arrange(fp_views) 
+
+table2 <- rbind(table2,
+                c("Mean",
+                  round(mean(table2$fp_views),3),
+                  round(mean(table2$iraq_dummy),3),
+                  round(mean(table2$article98),3),
+                  round(mean(table2$unvoting),3)))
+
+table2 <- rbind(table2,
+                c("St. Dev.",
+                  round(sd(table2$fp_views),3),
+                  round(sd(table2$iraq_dummy),3),
+                  round(sd(table2$article98),3),
+                  round(sd(table2$unvoting),3)))
+
+table2[, -1] <- lapply(table2[, -1], as.numeric)
+
+table2 <- table2 %>%
+  mutate(
+    fp_views = round(fp_views, 3),
+    iraq_dummy = ifelse(country %in% c("Mean", "St. Dev."),
+                        iraq_dummy,
+                        round(iraq_dummy, 0)),
+    article98 = ifelse(country %in% c("Mean", "St. Dev."),
+                       article98,
+                       round(article98, 0)),
+    unvoting = round(unvoting, 3)
+  )
+
+kable(table1, 
+      format = "latex", 
+      align = c("l","c","c","c","c"),
+      longtable = TRUE, 
+      booktabs = TRUE,
+      caption = "Observations, below the Median of Causal Variable", 
+      label = "tab:below",
+      linesep = "",
+      col.names = c("\\makecell[lc]{Country}",
+                    "\\makecell{Opinion\\\\about US\\\\Foreign Policy}",
+                    "\\makecell{Sent Troops\\\\to Iraq\\\\in 2003}",
+                    "\\makecell{BIA Entered\\\\into Force\\\\in 2003}",
+                    "\\makecell{UN Voting\\\\with US\\\\in 2003}"),
+      escape = F) %>%
+  kable_styling(latex_options = c("repeat_header")) %>%
+  row_spec(nrow(table1) - 2, 
+           extra_latex_after = "\\hline") 
+
+
+kable(table2, 
+      format = "latex",
+      align = c("l","c","c","c","c"),
+      longtable = TRUE, 
+      booktabs = TRUE,
+      caption = "Observations, above the Median of Causal Variable", 
+      label = "tab:above",
+      linesep = "",
+      col.names = c("\\makecell[lc]{Country}",
+                    "\\makecell{Opinion\\\\about US\\\\Foreign Policy}",
+                    "\\makecell{Sent Troops\\\\to Iraq\\\\in 2003}",
+                    "\\makecell{BIA Entered\\\\into Force\\\\in 2003}",
+                    "\\makecell{UN Voting\\\\with US\\\\in 2003}"),
+      escape = F) %>%
+  kable_styling(latex_options = c("repeat_header")) %>%
+  row_spec(nrow(table1) - 2, 
+           extra_latex_after = "\\hline")
+```
+
+# OLS Models {#ols}
+
+We reproduce the two OLS models (Models 5 and 6 in Table 3). The first model only includes the main independent variable (`fp_views`), while the second model also includes a battery of control variables. @goldsmith2012 find no significant effect in the base model, but do find a significant positive effect in the full model. Our models reproduce these findings. 
+
+However, the standard errors in Table 4 differ significantly from those in the original [@goldsmith2012, 577]. The reason is that @goldsmith2012 use heteroscedasticity robust standard errors. They do not specifically justify this choice, but it likely is motivated by the relatively small N of 58. 
+
+```{r ols, echo=F, warning=FALSE, message=FALSE, results='asis'}
+library(stargazer)
+
+ols1 <- lm(unvoting~
+            fp_views,
+          data=data)
+
+
+ols2 <- lm(unvoting~
+            fp_views +
+            afg_dummy +
+            icc +
+            s_lead +
+            nato +
+            aid_m +
+            aid_e +
+            lntrade +
+            lngdppc +
+            fh +
+            muslimpct +
+            europe,
+          data=data)
+
+
+stargazer(ols1, ols2,
+          dep.var.caption = "",
+          dep.var.labels = "UN Voting with US in 2003",
+          title = "Regression Results (OLS only)",
+          covariate.labels = c("Opinion on US FP",
+                               "Troops in AFG",
+                               "ICC member",
+                               "Alliance portfolio",
+                               "NATO",
+                               "US military aid",
+                               "US economic aid",
+                               "Trade with US",
+                               "GDP per capita",
+                               "Democracy score",
+                               "Muslim population",
+                               "Europe",
+                               "Constant"),
+          type = "latex",
+          no.space = T,
+          header = F, 
+          digits=2,
+          table.placement = "H")
+
+```
+
+
+```{r res_fitted_plot, echo=FALSE, fig.align='center', out.width="80%", fig.cap="Residuals vs. Fitted Plot", message=FALSE, warning=FALSE}
+
+library(showtext)
+library(lmtest)
+
+font_add("lmroman", "/usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf")
+showtext_auto()
+
+# Create the custom theme
+custom_theme <- theme_minimal() + 
+  theme(
+    text = element_text(family = "lmroman", color = "black"),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size=10),
+    legend.title = element_text(size=10),
+    legend.text = element_text(size=10),
+    plot.title = element_text(size = 12, hjust = 0.5)
+  )
+
+ols2_df <- data.frame(
+  fitted = ols2$fitted.values,
+  residuals = residuals(ols2),
+  sqrt_residuals = sqrt(abs(residuals(ols2)))  # for scale-location plot
+)
+
+# 1. Residuals vs Fitted Values Plot
+ggplot(ols2_df, aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "",
+       x = "Fitted Values",
+       y = "Residuals") +
+  custom_theme
+```
+
+The residuals vs. fitted values plot in Figure 1 does not suggest major problems with heteroscedasticity. There seems to be a slightly wider spread in the middle of the fitted value range, but there are no clear patterns. In fact, a Breusch-Pagan test produces as p value of `r round(bptest(ols2)$p.value, 4)`, meaning we cannot reject the null hypothesis of homoscedasticity.   
+
+We nevertheless proceed with calculating robust standard errors. Obtaining robust standard errors is straightforward in STATA (by simply adding `, vce(robust)` to the model); in \textbf{R}, we need to calculate the robust standard errors ourselves. We first calculate a robust variance-covariance matrix (using the `vcovHC` function from the `sandwich` package). We then extract the diagonal elements from this variance-covariance matrix which represent the variance of the estimated coefficient estimates (using the `diag` function). Since standard errors are defined as the square root of the variance of the coefficient estimates, we take the square root of the diagonal values (using `sqrt`) and obtain robust standard errors. 
+
+As Table 5 below shows, this procedure recovers the same standard errors as in the original article [@goldsmith2012, 577]. Including robust standard errors does not change our interpretation of the models. In fact, the only change is the level of significance in some variables. No variables lose or gain significance. 
+
+```{r ols_robust, echo=F, warning=FALSE, message=FALSE, results='asis'}
+library(stargazer)
+library(sandwich)
+
+ols1 <- lm(unvoting~
+            fp_views,
+          data=data)
+
+
+ols2 <- lm(unvoting~
+            fp_views +
+            afg_dummy +
+            icc +
+            s_lead +
+            nato +
+            aid_m +
+            aid_e +
+            lntrade +
+            lngdppc +
+            fh +
+            muslimpct +
+            europe,
+          data=data)
+
+robust_se_ols1 <- sqrt(diag(vcovHC(ols1, type = "HC1")))
+robust_se_ols2 <- sqrt(diag(vcovHC(ols2, type = "HC1")))
+
+stargazer(ols1, ols2,
+          se = list(robust_se_ols1, robust_se_ols2),
+          dep.var.caption = "",
+          dep.var.labels = "UN Voting with US in 2003",
+          title = "Regression Results (OLS only, Robust SEs)",
+          covariate.labels = c("Opinion on US FP",
+                               "Troops in AFG",
+                               "ICC member",
+                               "Alliance portfolio",
+                               "NATO",
+                               "US military aid",
+                               "US economic aid",
+                               "Trade with US",
+                               "GDP per capita",
+                               "Democracy score",
+                               "Muslim population",
+                               "Europe",
+                               "Constant"),
+          type = "latex",
+          no.space = T,
+          header = F, 
+          digits=2,
+          table.placement = "H")
+```
+
+
+## Marginal effects {#marg}
+
+A marginal effect measures the expected change in the dependent variable resulting from a one-unit change in an independent variable, holding all other variables constant. Following @goldsmith2012, we vary the independent variable from one standard deviation below to the mean to one standard deviation above the mean and plot the expected value of voting alignment for this range, along with 95\% confidence intervals. This reproduces the third panel of Figure 2 [@goldsmith2012,578].
+
+```{r marginal_effects, echo=FALSE, warning=FALSE, message=FALSE, out.width="80%", fig.align='center', fig.cap="Marginal Effect Plot"}
+
+library(ggplot2)
+library(dplyr)
+library(ggeffects)
+
+ols2 <- lm(unvoting~
+            fp_views +
+            afg_dummy +
+            icc +
+            s_lead +
+            nato +
+            aid_m +
+            aid_e +
+            lntrade +
+            lngdppc +
+            fh +
+            muslimpct +
+            europe +
+            nonnat,
+          data=data)
+
+
+mu <- mean(data$fp_views, na.rm = TRUE)
+sd1 <- sd(data$fp_views, na.rm = TRUE)
+range_fp <- seq(mu - sd1, mu + sd1, length.out = 21)
+
+pred <- ggpredict(ols2, terms = paste0("fp_views [", paste(round(range_fp, 3), collapse = ","), "]"))
+
+# Rescale y-axis to 0–1
+pred$predicted <- pred$predicted / 100
+pred$conf.low  <- pred$conf.low / 100
+pred$conf.high <- pred$conf.high / 100
+
+ticks <- c(mu - sd1, mu, mu + sd1)
+
+ggplot(pred, aes(x = x, y = predicted)) +
+  geom_line(size = 1) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
+  scale_x_continuous(
+    breaks = round(ticks, 2),
+    labels = round(ticks, 2)
+  ) +
+  ylim(0,1) +
+  labs(
+    x = "Opinion about US Foreign Policy",
+    y = "E( UN voting with US, ratio )"
+  ) +
+  custom_theme
+
+```
+
+# Conclusion {#concl}
+
+We have reproduced the OLS-based analysis in @goldsmith2012, finding identical results. We obtain different estimates of the standard deviations in the descriptive analysis, yet these differences are marginal. Moreover, there is little evidence for heteroscedasticity in the initial models, so the authors' choice of calculating robust standard errors is somewhat dubious. Yet, this choice does not influence the substantive interpretation of the results. 
+
+\newpage
+# References
