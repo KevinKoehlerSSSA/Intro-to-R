@@ -29,3 +29,11 @@ data <- data %>%
          s3=pos3-neg3,
          fp_views=rowMeans(cbind(s1,s2,s3), na.rm=T))
 
+
+data <- data %>%
+  mutate(
+    iraq_dummy=ifelse(troops_iraq>0,1,0),
+    afg_dummy=ifelse(troops_afgh>0,1,0),
+    fh=pr+cl,
+    nonnat=ifelse(nonnat1+nonnat2+nonnat3>0,1,0)
+  )
