@@ -108,3 +108,55 @@ stargazer(ols1, ols2,
           no.space = T,
           header = F, 
           digits=2)
+
+### Heteroscedasticity robust standard errors
+
+library(stargazer)
+library(sandwich)
+
+ols1 <- lm(unvoting~
+            fp_views,
+          data=data)
+
+
+ols2 <- lm(unvoting~
+            fp_views +
+            afg_dummy +
+            icc +
+            s_lead +
+            nato +
+            aid_m +
+            aid_e +
+            lntrade +
+            lngdppc +
+            fh +
+            muslimpct +
+            europe,
+          data=data)
+
+robust_se_ols1 <- sqrt(diag(vcovHC(ols1, type = "HC1")))
+robust_se_ols2 <- sqrt(diag(vcovHC(ols2, type = "HC1")))
+
+stargazer(ols1, ols2,
+          se = list(robust_se_ols1, robust_se_ols2),
+          dep.var.caption = "",
+          dep.var.labels = "UN Voting with US in 2003",
+          title = "Regression Results (OLS only, Robust SEs)",
+          covariate.labels = c("Opinion on US FP",
+                               "Troops in AFG",
+                               "ICC member",
+                               "Alliance portfolio",
+                               "NATO",
+                               "US military aid",
+                               "US economic aid",
+                               "Trade with US",
+                               "GDP per capita",
+                               "Democracy score",
+                               "Muslim population",
+                               "Europe",
+                               "Constant"),
+          type = "text",
+          no.space = T,
+          header = F, 
+          digits=2,
+          table.placement = "H")
