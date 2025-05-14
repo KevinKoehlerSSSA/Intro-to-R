@@ -71,6 +71,7 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 -  Goldsmith, Benjamin E. and Yusaku Horiuchi. 2012. "In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?" *World Politics* 64 (3): 555-585. [doi:10.1017/S0043887112000123](https://www.cambridge.org/core/journals/world-politics/article/in-search-of-soft-power-does-foreign-public-opinion-matter-for-us-foreign-policy/0C9DB5A0FB1EF43767932DE4E2C4DCEF)
 -  The data are available [here](https://github.com/joshuaalley/cross-sectional-ols)
 -  [Replication report](Replication1.pdf)
+-  [Replication code](Replication1.Rmd)
 
 ### Session 8: Logistic regression
 - [Slides session 8](#)
