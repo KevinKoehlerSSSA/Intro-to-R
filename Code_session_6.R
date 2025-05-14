@@ -37,3 +37,74 @@ data <- data %>%
     fh=pr+cl,
     nonnat=ifelse(nonnat1+nonnat2+nonnat3>0,1,0)
   )
+
+
+#### Models 
+
+install.packages("stargazer")
+library(stargazer)
+
+ols1 <- lm(unvoting~
+             fp_views,
+           data=data)
+
+
+ols2 <- lm(unvoting~
+             fp_views +
+             afg_dummy +
+             icc +
+             s_lead +
+             nato +
+             aid_m +
+             aid_e +
+             lntrade +
+             lngdppc +
+             fh +
+             muslimpct +
+             europe,
+           data=data)
+
+
+stargazer(ols1, ols2,
+          dep.var.labels = "UN Voting with US in 2003",
+          title = "Regression Results (OLS only)",
+          covariate.labels = c("Opinion on US FP",
+                               "Troops in AFG",
+                               "ICC member",
+                               "Alliance portfolio",
+                               "NATO",
+                               "US military aid",
+                               "US economic aid",
+                               "Trade with US",
+                               "GDP per capita",
+                               "Democracy score",
+                               "Muslim population",
+                               "Europe",
+                               "Constant"),
+          type = "text",
+          no.space = T,
+          header = F, 
+          digits=2)
+
+
+stargazer(ols1, ols2,
+          dep.var.labels = "UN Voting with US in 2003",
+          title = "Regression Results (OLS only)",
+          covariate.labels = c("Opinion on US FP",
+                               "Troops in AFG",
+                               "ICC member",
+                               "Alliance portfolio",
+                               "NATO",
+                               "US military aid",
+                               "US economic aid",
+                               "Trade with US",
+                               "GDP per capita",
+                               "Democracy score",
+                               "Muslim population",
+                               "Europe",
+                               "Constant"),
+          type = "html",
+          out = "models.html",
+          no.space = T,
+          header = F, 
+          digits=2)
