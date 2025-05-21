@@ -8,7 +8,7 @@ library(sandwich)
 
 
 ### Get data
-data <- read_dta("/Users/kevin/Dropbox (Personal)/Sant\'Anna/Teaching/2025 - 1 - Data Analysis in R/data_2011-07-26.dta")
+data <- read_dta("data_2011-07-26.dta")
 
 
 ### Summary stats
