@@ -74,8 +74,7 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 -  [Replication code](Replication1.Rmd)
 
 ### Session 8: Logistic regression
-- [Slides session 8](#)
-- [Code session 8](#)
+- [Slides session 8](Session-8.pdf)
 
 ### Sesssion 9: Replication II - Does Counterbalancing Prevent Military Coups?
 
@@ -83,6 +82,7 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 
 -  De Bruin, Erica. 2018. "Preventing Coups d’état: How Counterbalancing Works." *Journal of Conflict Resolution* 62 (7): 1433–58. [doi: 10.1177/0022002717692652](https://doi.org/10.1177/0022002717692652)
 -  The data are available [here](https://journals.sagepub.com/doi/abs/10.1177/0022002717692652)
--  [Code session 9](#)
+-  [Replication report](Replication2.pdf)
 
-### Session 10: TBD
+### Session 10: Basic Web Scraping
+-[Slides session 10](Slides-10.pdf)
