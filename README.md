@@ -75,6 +75,7 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 
 ### Session 8: Logistic regression
 - [Slides session 8](Session-8.pdf)
+- [Replication code](replication.R)
 
 ### Sesssion 9: Replication II - Does Counterbalancing Prevent Military Coups?
 
@@ -85,4 +86,4 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 -  [Replication report](Replication2.pdf)
 
 ### Session 10: Basic Web Scraping
--[Slides session 10](Slides-10.pdf)
+- [Slides session 10](Slides-10.pdf)
