@@ -87,3 +87,4 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 
 ### Session 10: Basic Web Scraping
 - [Slides session 10](Slides-10.pdf)
+- [Scraping example](Scraping.pdf)
