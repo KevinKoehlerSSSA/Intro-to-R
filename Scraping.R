@@ -13,5 +13,7 @@ us_table <- us_table %>%
          party=Party.b..17..1)
 
 str_extract(us_table$name[1], ".+(?=\\()")
+str_extract(us_table$term[1], ".+(?=-)")
+
 
 us_table$name[1]
