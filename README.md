@@ -42,6 +42,7 @@ The final code file is due on the last day of class, Monday 14 December.
 ### Session 1: Getting set up
 - [Slides session 1](Session-1-2026.pdf)
 - [Prompts and commands session 1](Session-1-prompts.md)
+- [Adding the MiniMax models to OpenCode](OpenCode_MiniMax_setup.pdf)
 - Readings: Kennedy and Waggoner 2021, Introduction and Chapter 2.
 
 ### Session 2: Data management
