@@ -18,11 +18,19 @@ If you are not using the OpenCode app, open the **Terminal** tab in RStudio and 
 opencode
 ```
 
-Then choose the course model:
+Then connect MiniMax with the course key and choose the course model, **MiniMax M2**. The [setup guide](OpenCode_MiniMax_setup.pdf) shows each step in the app. In the terminal, connect with:
+
+```
+/connect
+```
+
+and choose the model with:
 
 ```
 /models
 ```
+
+No key yet, or it does not work? Use a free OpenCode Zen model for today.
 
 ## Step 3: test it
 
