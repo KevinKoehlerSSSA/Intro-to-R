@@ -41,6 +41,7 @@ The final code file is due on the last day of class, Monday 14 December.
 ## Slides and code files
 ### Session 1: Getting set up
 - [Slides session 1](Session-1-2026.pdf)
+- [Prompts and commands session 1](Session-1-prompts.md)
 - Readings: Kennedy and Waggoner 2021, Introduction and Chapter 2.
 
 ### Session 2: Data management
