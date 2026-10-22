@@ -11,6 +11,9 @@ Please install the following before Friday 23 October:
 - RStudio: [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
 - OpenCode: [opencode.ai/download](https://opencode.ai/download). The desktop app is the simplest option. No account or paid subscription is needed; we will choose a model and connect OpenCode to your R project together in the first session.
 
+Then download the course folder and unzip it somewhere you will find it again. We will open it in RStudio and OpenCode in the first session.
+- [Course folder (zip)](Data-Analysis-in-R.zip)
+
 No prior programming experience is assumed.
 
 ## Data and codebook
