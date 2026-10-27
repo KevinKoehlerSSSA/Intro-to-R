@@ -28,8 +28,8 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 |---|------|------|-------|
 | 1 | Fri 23 Oct | 16:00–18:00 | Getting set up |
 | 2 | Fri 30 Oct | 16:00–18:00 | Data management |
-| 3 | Mon 2 Nov | 09:00–11:00 | Visualization |
-| 4 | Mon 9 Nov | 16:00–18:00 | R programming |
+| 3 | Fri 6 Nov | 16:00–18:00 | Visualization |
+| 4 | Fri 13 Nov | 14:00–16:00 | R programming |
 | 5 | Mon 16 Nov | 16:00–18:00 | Exploring data |
 | 6 | Mon 23 Nov | 16:00–18:00 | Linear regression |
 | 7 | Mon 30 Nov | 09:00–11:00 | Replication I: U.S. Soft-Power and Foreign Policy Behavior (OLS) |
