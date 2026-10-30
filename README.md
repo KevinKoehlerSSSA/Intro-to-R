@@ -48,6 +48,7 @@ The final code file is due on the last day of class, Monday 14 December.
 ### Session 2: Data management
 - [Slides session 2](Session-2-2026.pdf)
 - [Lab instructions session 2](Session-2-Lab-Instructions.pdf)
+- [Lab solution session 2](Session-2-Lab-Solution.pdf)
 - Readings: Kennedy and Waggoner 2021, Chapter 3.
 
 ### Session 3: Visualization
