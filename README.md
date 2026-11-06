@@ -52,6 +52,7 @@ The final code file is due on the last day of class, Monday 14 December.
 - Readings: Kennedy and Waggoner 2021, Chapter 3.
 
 ### Session 3: Visualization
+- [Prompts and commands session 3](Session-3-prompts.md)
 - [In-class activity: correct, but misleading (figures, scripts, data)](Session-3-gallery/)
 - Readings: Kennedy and Waggoner 2021, Chapter 4.
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
