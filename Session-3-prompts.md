@@ -35,7 +35,15 @@ table(d$conflict, useNA = "always")
 
 ## Step 2: Step 5 of the lab as a figure
 
-First, **without** the assistant, answer the five design questions in `notes/lab2.md`: what does "concentrated" mean, what does "poorer" mean, which years, which year's income, and what result would make the claim false? Then:
+This is Step 5 of the Session 2 lab: **design the test**. Decide how to test the claim **before** you prompt anything. With your partner, and **without** the assistant, answer these five questions and write your answers in `notes/lab2.md` (create the file if you do not have it):
+
+1. What does **"concentrated"** mean? For example: conflict is more common among poorer countries; or the average income of country-years with conflict is lower than of those without. Choose one and say why.
+2. What does **"poorer"** mean? Income as a number? Groups (e.g. four groups from poorest to richest)? Relative to what?
+3. Which **years** count as "since the end of the Cold War"?
+4. Could the pattern **run the other way**? War destroys income. If a country is poor *during* a conflict, does that support the claim? Which year's income should you use?
+5. What result would make you say the claim is **false**?
+
+Then write a prompt that implements your test:
 
 ```
 Using output/conflict_income.csv, make a figure that tests whether internal conflict since 1990 is concentrated in poorer countries. Our test is: [your answers to the design questions]. Save it as output/step5.png.
