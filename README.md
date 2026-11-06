@@ -54,6 +54,7 @@ The final code file is due on the last day of class, Monday 14 December.
 ### Session 3: Visualization
 - [Prompts and commands session 3](Session-3-prompts.md)
 - [In-class activity: correct, but misleading (figures, scripts, data)](Session-3-gallery/)
+- [Annotated Lab 2 student script: what went right, and why the table has only conflict years](Session-3-Lab-2-annotated-script.R)
 - Readings: Kennedy and Waggoner 2021, Chapter 4.
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 
