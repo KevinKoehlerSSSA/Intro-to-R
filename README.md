@@ -29,7 +29,7 @@ In the first part of the class, we will work with data on Tunisia. Below are the
 | 1 | Fri 23 Oct | 16:00–18:00 | Getting set up |
 | 2 | Fri 30 Oct | 16:00–18:00 | Data management |
 | 3 | Fri 6 Nov | 16:00–18:00 | Visualization |
-| 4 | Fri 13 Nov | 14:00–16:00 | R programming |
+| 4 | Fri 13 Nov | 14:00–16:00 | Hypothesis testing |
 | 5 | Mon 16 Nov | 16:00–18:00 | Exploring data |
 | 6 | Mon 23 Nov | 16:00–18:00 | Linear regression |
 | 7 | Mon 30 Nov | 09:00–11:00 | Replication I: U.S. Soft-Power and Foreign Policy Behavior (OLS) |
@@ -58,8 +58,10 @@ The final code file is due on the last day of class, Monday 14 December.
 - Readings: Kennedy and Waggoner 2021, Chapter 4.
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 
-### Session 4: R programming
-- Readings: Kennedy and Waggoner 2021, Chapter 5.
+### Session 4: Hypothesis testing
+- Reading: [*Could It Be Chance? A plain-language guide to hypothesis testing*](Reader-Hypothesis-Testing.pdf) (course reader). Read Sections 1–6 before class; Sections 7–10 and the appendix (your Session 3 figures, with comments) after.
+- Optional: Kennedy and Waggoner 2021, Chapter 7, sections 7.1–7.3.
+- Data: we keep working with [lab2_full_table.csv](Session-3-gallery/lab2_full_table.csv). Put a copy in your project's `data/` folder.
 
 ### Session 5: Exploring data
 - Readings: Kennedy and Waggoner 2021, Chapter 6.
