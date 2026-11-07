@@ -2,9 +2,10 @@
 # ANNOTATED COPY of 15_bubble_figure.R (bubble chart, sent 7 November 2026)
 #
 # Lines starting with  # >>  are my comments. Everything else is your code,
-# unchanged. I could NOT run this one: it reads output/bubble_panel.csv,
+# unchanged. I could not run this one: it reads output/bubble_panel.csv,
 # built by your script 14 from World Bank, UCDP and UN files that you did not
-# send. The comments are from reading the code.
+# send. The comments are from reading the code and the PNG you sent, which
+# is what this code produces.
 #
 # THE SHORT VERSION
 #   + A finished, publication-style figure: sources, definitions, dropped
@@ -17,6 +18,9 @@
 #   - The death variable is probably not "battle-related deaths": Rwanda
 #     1994 at 11,372 per 100,000 is the genocide (one-sided violence).
 #   - The p-value treats every country-year as independent.
+#   - Two silent bugs, visible in your PNG: the x-axis limit of $125,000
+#     drops the richest country-years AND the regression line; and the
+#     country-years with zero deaths sit on the line labelled "1".
 #   - Several numbers and all label positions are typed by hand.
 # =============================================================================
 
@@ -206,10 +210,27 @@ figure <- ggplot(plot_data, aes(x = x, y = y, colour = region)) +
     breaks = log10(c(500, 1000, 2000, 5000, 10000, 20000, 50000, 100000)),
     labels = c("500", "1,000", "2,000", "5,000", "10,000", "20,000", "50,000", "100,000"),
     limits = c(log10(420), log10(125000)),
+# >> Look at your PNG: there is no dashed line, although the caption
+# >> describes one. This limit is the reason. Some country-years have more
+# >> than $125,000 per head (in lab2_full_table.csv: Luxembourg, Qatar,
+# >> Singapore and Ireland, 31 country-years, up to $149,000). ggplot removes
+# >> everything outside the limits: those bubbles disappear, and so does the
+# >> right end of line_data, which sits at the maximum GDP. A line with one
+# >> point is not drawn. R only says "Removed ... rows" in a warning. The
+# >> correlation, the R-squared and the caption count still include the
+# >> dropped points, so the figure and its numbers no longer match. Set the
+# >> limit above the maximum, or use coord_cartesian(xlim = ...), which zooms
+# >> without dropping data.
     expand = expansion(mult = c(0.02, 0.03))
   ) +
   scale_y_continuous(
     breaks = log10(c(0, 1, 10, 100, 1000, 10000)),
+# >> log10(0) is -Inf, so the first break and its label "0" are dropped. The
+# >> next break, log10(1) = 0, is labelled "1". But y = log10(deaths + 1), so
+# >> 0 on this axis means ZERO deaths: in your PNG the thick band of peaceful
+# >> country-years sits on the line labelled "1", while the caption says they
+# >> are "plotted at 0". Put the breaks at log10(c(0, 1, 10, 100, 1000,
+# >> 10000) + 1) and keep your labels.
     labels = c("0", "1", "10", "100", "1,000", "10,000+"),
     limits = c(-0.15, 4.35),
     expand = expansion(mult = c(0.02, 0.03))
