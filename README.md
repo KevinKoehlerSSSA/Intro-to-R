@@ -59,6 +59,7 @@ The final code file is due on the last day of class, Monday 14 December.
 - [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 
 ### Session 4: Hypothesis testing
+- [Prompts and commands session 4](Session-4-prompts.md)
 - Reading: [*Could It Be Chance? A plain-language guide to hypothesis testing*](Reader-Hypothesis-Testing.pdf) (course reader). Read Sections 1–6 before class; Sections 7–10 and the appendix (your Session 3 figures, with comments) after.
 - Annotated Step 5 scripts from Session 3, one per figure in the reader appendix: [A](Session-4-annotated-script-A.R) · [B](Session-4-annotated-script-B.R) · [C](Session-4-annotated-script-C.R) · [D](Session-4-annotated-script-D.R) · [E](Session-4-annotated-script-E.R) · [F1](Session-4-annotated-script-F1.R) · [F2](Session-4-annotated-script-F2.R) · [G](Session-4-annotated-script-G.R). Lines starting with `# >>` are my comments.
 - Optional: Kennedy and Waggoner 2021, Chapter 7, sections 7.1–7.3.
