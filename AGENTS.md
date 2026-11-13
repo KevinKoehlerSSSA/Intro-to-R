@@ -4,17 +4,22 @@ This is a course project for a class on data analysis in R. The student is learn
 
 ## How to work
 - Use R. Base R is fine for simple steps, as in Example 1 at the end of this file; use the tidyverse for data manipulation (filtering, recoding, summarising tables).
-- Put scripts in `scripts/`, outputs (figures, tables) in `output/`. Never modify files in `data/`.
-- The data are `data/tunisia_survey.csv`. The codebook is `data/codebook.md` (the same content as `data/Codebook-TUN-Survey.pdf`).
+- Put scripts in `scripts/`. Never modify files in `data/`.
+- Every script must show its results and plots when the student runs it in RStudio: tables in the Console, plots in the Plots pane. Never send a plot only to a file: no `png()`, `pdf()` or `jpeg()` ... `dev.off()` blocks.
+- Write each ggplot so it prints: either the plain `ggplot(...) + ...` call, or save it as `p` and put `print(p)` on the next line.
+- Save a figure only if the student asks. Then show the plot first and save it after with `ggsave("output/name.png")`.
+- First action in every session, before anything else: list the `data/` folder and check that `tunisia_survey.csv` is there. If it is not, you were started in the wrong folder. Stop and tell the student: close OpenCode and open it again in the course folder (the folder that contains `AGENTS.md` and `Data-Analysis-in-R.Rproj`). Do not search the computer for the folder, do not create a `data/` folder, do not download the data, and do not write `setwd()` anywhere.
+- The data are `data/tunisia_survey.csv`; from Session 4 also `data/lab2_full_table.csv`. The codebook is `data/codebook.md` (the same content as `data/Codebook-TUN-Survey.pdf`).
 - Comment every step in plain language: what it does and why.
-- Before running a script, say in one or two sentences what it will do.
+- You may run scripts with `Rscript` to test them. Before running one, say in one or two sentences what it will do. `Rscript` cannot show plots and puts them in `Rplots.pdf`; that file is a by-product and is not the result.
+- After writing or changing a script, tell the student to open it in RStudio and run it there to see the results: line by line with Ctrl+Enter (Mac: Cmd+Enter), or all at once with Ctrl+Alt+R (Mac: Cmd+Option+R).
 
 ## Keep the code simple
 The students are first-time R users. They must be able to read every script top to bottom and explain each line. Clarity and simplicity always come before elegance, brevity or generality.
 - Do not write your own functions (`function()`) unless the student explicitly asks for one. If the same steps are needed twice (e.g. for two variables), write the block out again and change only what differs.
 - Prefer longer, simpler code to shorter, clever code. One operation per line; save intermediate results under clear names instead of nesting function calls inside each other. Keep pipes (`%>%`) to a few steps.
 - Avoid advanced constructs: `lapply()`/`sapply()`/`purrr::map()`, `do.call()`, `Reduce()`, `repeat`/`while`, nested loops, lists of lists, list-columns, `tryCatch()`, `sink()`, tidy evaluation.
-- Assume the script is run from the project folder and use simple relative paths (e.g. `"data/tunisia_survey.csv"`). Do not write code to locate folders, check that files exist or handle errors unless asked.
+- Assume the script is run from the project folder and use simple relative paths (e.g. `"data/tunisia_survey.csv"`). Never write `setwd()` and never write an absolute path such as `C:/Users/...` or `/Users/...` into a script. Run scripts from the project folder (`Rscript scripts/01_first_look.R`), never from inside `scripts/`. Do not write code to locate folders, check that files exist or handle errors unless asked.
 - Do only what the prompt asks. No extra logs, options, formatting or analyses; suggest extras in the chat instead.
 - Keep output and plots plain: `print()` or `round()` rather than elaborate `sprintf()` formatting; one plot type with a title and axis labels, nothing more unless asked.
 - Keep comments short: one or two plain-language lines per step, not long blocks of text.
