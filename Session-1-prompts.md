@@ -4,7 +4,9 @@ Use the copy button in the top-right corner of each box. Type the prompts to Ope
 
 ## Step 1: a project
 
-In the RStudio **Console**, check where R is looking:
+Double-click `Data-Analysis-in-R.Rproj` in the course folder. The Console should say `Course project OK`. If it says `WRONG FOLDER`, you opened a file somewhere else: close RStudio and double-click the `.Rproj` file again.
+
+Then, in the RStudio **Console**, check where R is looking:
 
 ```r
 getwd()
@@ -47,7 +49,7 @@ OpenCode should ask your permission before running the second one. If it does no
 ## Demo
 
 ```
-Read the file data/tunisia_survey.csv and the codebook. Write a script scripts/01_first_look.R that loads the data with the tidyverse, reports the number of respondents, and makes a bar chart of the variable july25. Run it.
+Read the file data/tunisia_survey.csv and the codebook. Write a script scripts/01_first_look.R that loads the data with the tidyverse, reports the number of respondents, and makes a bar chart of the variable july25. Run it, then tell me how to run it in RStudio so I can see the chart.
 ```
 
 ## Packages and help

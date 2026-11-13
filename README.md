@@ -11,8 +11,13 @@ Please install the following before Friday 23 October:
 - RStudio: [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
 - OpenCode: [opencode.ai/download](https://opencode.ai/download). The desktop app is the simplest option. No account or paid subscription is needed; we will choose a model and connect OpenCode to your R project together in the first session.
 
-Then download the course folder and unzip it somewhere you will find it again. We will open it in RStudio and OpenCode in the first session.
+Then download the course folder and **extract** it somewhere you will find it again, for example `Documents` (Windows: right-click the zip, *Extract All*; double-clicking the zip only shows a preview, and nothing will work from there).
 - [Course folder (zip)](Data-Analysis-in-R.zip)
+
+To start working, always open the folder like this:
+- **RStudio:** double-click `Data-Analysis-in-R.Rproj` inside the folder. RStudio opens in the right place and the Console says `Course project OK`. Never use `setwd()` and never type a path.
+- **OpenCode:** double-click `start-opencode.bat` (Windows) or `start-opencode.command` (Mac; the first time, right-click it and choose *Open*). If the OpenCode app is installed instead of the command, the window shows the exact folder to pick with *Open folder* in the app.
+- Already have the folder from Session 1? Download the zip again and copy `Data-Analysis-in-R.Rproj`, `.Rprofile`, `AGENTS.md` and the two `start-opencode` files into your existing folder.
 
 No prior programming experience is assumed.
 
@@ -63,7 +68,8 @@ The final code file is due on the last day of class, Monday 14 December.
 - Reading: [*Could It Be Chance? A plain-language guide to hypothesis testing*](Reader-Hypothesis-Testing.pdf) (course reader). Read Sections 1–6 before class; Sections 7–10 and the appendix (your Session 3 figures, with comments) after.
 - Annotated Step 5 scripts from Session 3, one per figure in the reader appendix: [A](Session-4-annotated-script-A.R) · [B](Session-4-annotated-script-B.R) · [C](Session-4-annotated-script-C.R) · [D](Session-4-annotated-script-D.R) · [E](Session-4-annotated-script-E.R) · [F1](Session-4-annotated-script-F1.R) · [F2](Session-4-annotated-script-F2.R) · [G](Session-4-annotated-script-G.R). Lines starting with `# >>` are my comments.
 - Optional: Kennedy and Waggoner 2021, Chapter 7, sections 7.1–7.3.
-- Data: we keep working with [lab2_full_table.csv](Session-3-gallery/lab2_full_table.csv). Put a copy in your project's `data/` folder.
+- Data: we keep working with [lab2_full_table.csv](Session-3-gallery/lab2_full_table.csv). Put a copy in your project's `data/` folder. It is also in the updated course folder zip.
+- New from this session: OpenCode may still run scripts to test them, but every script now shows its plots in RStudio instead of only saving them to files. Open the script in RStudio and run it line by line with Ctrl+Enter (Mac: Cmd+Enter); plots appear in the Plots pane. To get this behaviour, copy the new `AGENTS.md` from the [course folder zip](Data-Analysis-in-R.zip) into your course folder, replacing the old one.
 
 ### Session 5: Exploring data
 - Readings: Kennedy and Waggoner 2021, Chapter 6.
