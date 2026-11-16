@@ -73,6 +73,7 @@ The final code file is due on the last day of class, Monday 14 December.
 
 ### Session 5: Exploring data
 - Readings: Kennedy and Waggoner 2021, Chapter 6.
+- Code for the first hour (hypothesis testing, step by step): [session5_recap.R](session5_recap.R). It reads `data/lab2_full_table.csv`.
 
 ### Session 6: Linear regression
 - Readings: Kennedy and Waggoner 2021, Chapter 7 (focus on section 7.5 Ordinary Least Squares Regression).
