@@ -80,6 +80,8 @@ The final code file is due on the last day of class, Monday 14 December.
 - Readings: Kennedy and Waggoner 2021, Chapter 7 (focus on section 7.5 Ordinary Least Squares Regression).
 - Code: [session6_regression.R](session6_regression.R). Put it in your project's `scripts/` folder and run it line by line.
 - Data: [data_2011-07-26.dta](data_2011-07-26.dta), the replication data of Goldsmith and Horiuchi (2012). Put it in your project's `data/` folder.
+- A second, smaller example for sections 3 to 6 (ten students, every step by hand): [slides](Session-6-students.pdf) and code [session6_students_regressions.R](session6_students_regressions.R). It needs no data file.
+- Extra code: [session6_push_pull.R](session6_push_pull.R) lists all 58 countries with their products: who pushes the slope up and who pulls it down.
 
 ### Session 7: Replication I: U.S. Soft-Power and Foreign Policy Behavior
 
