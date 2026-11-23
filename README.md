@@ -76,6 +76,7 @@ The final code file is due on the last day of class, Monday 14 December.
 - Code for the first hour (hypothesis testing, step by step): [session5_recap.R](session5_recap.R). It reads `data/lab2_full_table.csv`.
 
 ### Session 6: Linear regression
+- [Slides session 6](Session-6-2026-merged.pdf): the session slides, with the ten-students example (slides S3.1 to S6.5) after slide 6.5.
 - Reading: Section 11, "From a gap to a line: linear regression", of the course reader [*Could It Be Chance?*](Reader-Hypothesis-Testing.pdf). The reader has been updated with this new section: download it again.
 - Readings: Kennedy and Waggoner 2021, Chapter 7 (focus on section 7.5 Ordinary Least Squares Regression).
 - Code: [session6_regression.R](session6_regression.R). Put it in your project's `scripts/` folder and run it line by line.
