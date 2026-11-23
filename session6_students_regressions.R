@@ -155,7 +155,7 @@ students
 #   1. sum of the products:   the result of the vote
 #   2. sum of dx_squared:     how spread out the scores are
 #   3. sum of dy_squared:     how spread out the attitudes are
-# Everything that follows (slope, correlation) is made from these three.
+# The slope, a few steps further down, is made from the first two.
 sum(students$product)
 sum(students$dx_squared)
 sum(students$dy_squared)
@@ -192,15 +192,26 @@ students$dx_squared <- students$dx^2
 student_slope <- sum(students$product) / sum(students$dx_squared)
 student_slope
 
-# The intercept is where the line starts: the attitude the line gives to
-# a student with 0 questions right.
-# We find it by starting at the mid-point and walking back to a score of
-# 0: that is mean_x steps to the left, and at each step the line drops
-# by the slope.
+
+# ---- S4.8: 4e, where the line starts: the intercept ----
+
+# Step 6: the slope says how steep the line is, but not where it lies.
+# For that we need a second number, the intercept: the attitude the line
+# gives to a student with 0 questions right.
+# We know one point that is on the line for sure: the mid-point.
+# So we start there and walk back to a score of 0:
+#   that is mean_x questions to the left,
+#   and for every question we go back, the line drops by the slope.
+# In total the line drops by  student_slope * mean_x .
+# What is left of mean_y is the intercept.
 student_intercept <- mean_y - student_slope * mean_x
 student_intercept
 
-# R can do all five steps in one go. lm() means "linear model".
+# Nobody in the data scored 0. The intercept is where the line would
+# arrive if we stretched it back that far. We need it to write the line
+# down:   attitude = intercept + slope x score
+
+# R can do all six steps in one go. lm() means "linear model".
 # y ~ x reads "y explained by x": attitude explained by score.
 # coef() prints the intercept and the slope. They must be the same two
 # numbers we just built by hand.
@@ -211,72 +222,44 @@ coef(m_students)
 # questions right? Start at the intercept, add the slope 15 times.
 student_intercept + student_slope * 15
 
-
-# ---- S4.8: the correlation, by hand ----
-
-# The slope says how STEEP the line is. The correlation (r) says how
-# TIDY the cloud of dots is: do the dots hug the line (r near 1 or -1)
-# or are they all over the place (r near 0)?
-# It comes from the same three sums.
-
-# The third sum: how spread out the attitudes are.
-sum(students$dy_squared)
-
-# Multiply the two spreads and take the square root (sqrt).
-sqrt(sum(students$dx_squared) * sum(students$dy_squared))
-
-# r = the result of the vote, divided by that number.
-# The slope divided the vote by the spread of the scores only.
-# r divides it by the spread of both, so the units drop out and r always
-# lies between -1 and +1.
-student_r <- sum(students$product) /
-  sqrt(sum(students$dx_squared) * sum(students$dy_squared))
-student_r
-
-# R's own function for the correlation. It must give the same number.
-cor(students$x, students$y)
+# The picture on slide S4.8: the line stretched back to a score of 0.
+# The solid part covers the students we have, the dashed part is the
+# stretch. The red cross is the mid-point; the blue dot on the left
+# axis is the intercept.
+ggplot(students, aes(x = x, y = y)) +
+  geom_point(shape = 18, size = 3) +
+  geom_abline(intercept = student_intercept, slope = student_slope,
+              colour = "blue", linetype = "dashed") +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(x = mean_x, y = mean_y, colour = "red", shape = 3, size = 4) +
+  geom_point(x = 0, y = student_intercept, colour = "blue", size = 3) +
+  xlim(0, 20) + ylim(0, 100) +
+  labs(x = "Questions correct (out of 20)", y = "Attitude to tests (%)") +
+  theme_classic()
 
 
-# ---- S4.9: a second route to the same slope ----
+# ---- S4.9 and S4.10: in class, Kevin (20 questions right) ----
 
-# The slope can be computed in another way:
-#   slope = r  x  (standard deviation of y) / (standard deviation of x)
-# A standard deviation is a typical distance from the average.
-# By hand: take the sum of the squared distances, divide by the number
-# of students minus one (10 - 1), and take the square root.
-sqrt(sum(students$dy_squared) / (10 - 1))   # typical attitude distance
-sqrt(sum(students$dx_squared) / (10 - 1))   # typical score distance
-
-# R's own function sd() does the same. Compare with the two lines above.
-sd(students$y)
-sd(students$x)
-
-# The second formula. In words: if score and attitude moved perfectly
-# together, one typical step in score would go with one typical step in
-# attitude. They do not move perfectly together, so we shrink that by r.
-# The result must be the slope we already have.
-student_r * sd(students$y) / sd(students$x)
-
-
-# ---- S4.10 and S4.11: in class, Kevin (attitude 93.7) ----
-
-# Kevin's attitude is 93.7. What was his score?
-# Our line works like a machine: a score goes in, an attitude comes out:
+# Kevin got all 20 questions right. What attitude does our line predict
+# for him? The line works like a machine: a score goes in, an attitude
+# comes out:
 #   attitude = intercept + slope x score
-# Here we know what came out (93.7) and want to know what went in.
-# So we run the machine backwards: first take away the intercept, then
-# divide by the slope.
-(93.7 - student_intercept) / student_slope
+# Start at the intercept, then add the slope once for each of his 20
+# questions.
+student_intercept + student_slope * 20                    # Kevin
 
-# A caution. Our line was built to guess the attitude from the score.
-# To guess the score from the attitude, statisticians build a second
-# line with the two roles swapped: x ~ y instead of y ~ x.
-m_score <- lm(x ~ y, data = students)
-coef(m_score)
+# The same for Anna, who got 17 right.
+student_intercept + student_slope * 17                    # Anna
 
-# What that second line predicts for an attitude of 93.7.
-# It is not the same answer as above: two questions, two lines.
-predict(m_score, data.frame(y = 93.7))
+# R's own way: predict() puts new scores into the line for us.
+# data.frame(x = c(20, 17)) is a small table with the two scores.
+predict(m_students, data.frame(x = c(20, 17)))            # the same with R
+
+# A prediction is not the truth. Look Anna up in the table: her real
+# attitude is higher than what the line gives her. The line says what to
+# expect for a student with her score; single students lie above or
+# below it. The next line prints both numbers side by side.
+students %>% filter(name == "Anna") %>% select(name, x, y)
 
 
 # ---- S5.1: an invented world of 20,000 students ----
