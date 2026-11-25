@@ -103,5 +103,8 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 
 Slides and code for each session will be posted here before class.
 
+## Easy extras
+- [Easy extras](Easy-extras.pdf): short videos, games and web pages on the topics of the class. Optional.
+
 ## Previous years
 - [AY 24/25 materials](AY_24-25.md)
