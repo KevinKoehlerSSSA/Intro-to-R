@@ -101,25 +101,9 @@ Open `scripts/session7_lab.R` in RStudio. Run it **line by line** with Ctrl+Ente
 - Are there 58 countries in both models?
 - Opinion slope in Model 5: **2.07**? In Model 6: **15.78**?
 - Open Table 3 in the article (Models 5 and 6, "UN Voting with US in 2003"). Do your **coefficients** match the article's?
-- Now compare the **standard errors** (in square brackets in the article) with yours. Do they match?
+- For the opinion slope in each model, write down the **standard error**, the **95% interval** and the **p-value**. Does the interval contain 0?
 
 If your coefficients differ, find the line where your script differs from the instructions in Step 3 before you ask OpenCode to fix it.
-
-### Step 4b: Why the standard errors differ
-
-Your coefficients should match the article exactly, but your standard errors will not: R gives **9.55** and **4.97** for the opinion slope, the article **9.06** and **3.62**.
-
-The reason is condition 2 on today's slides (equal spread of the prediction errors). R's default formula assumes it. Goldsmith and Horiuchi do not: they report **robust standard errors**, which allow the spread of the prediction errors to differ across countries. There are several versions; theirs is the one called **HC1** (the same as Stata's `robust` option).
-
-Ask OpenCode:
-
-```
-Add robust standard errors (type HC1) to scripts/session7_lab.R for both models, using the sandwich and lmtest packages: print coeftest() with vcovHC(type = "HC1") for each model, and the 95% intervals with coefci() using the same robust standard errors. Keep the default results above. Write simple code: no functions of your own.
-```
-
-Run the new lines yourself. **Check:** do you now get 9.06 (Model 5) and 3.62 (Model 6) for the opinion slope, and the article's standard errors for the controls?
-
-For the opinion slope in each model, write down the **robust standard error**, the **95% interval** and the **p-value**. Does the interval contain 0?
 
 ---
 
@@ -128,18 +112,16 @@ For the opinion slope in each model, write down the **robust standard error**, t
 In the same OpenCode session:
 
 ```
-Add a final step to scripts/session7_lab.R: a regression table with Model 5 and Model 6 side by side, saved as output/session7_table.html. Use the modelsummary package (tell me if I need to install it). Use the robust standard errors (HC1), as in the article, and show them in parentheses under each coefficient, stars for p < 0.05 and p < 0.01, the number of observations and the R-squared. Give the variables readable names (for example "Opinion of US foreign policy" instead of opinion). Keep all controls in the table. Write simple code: no functions of your own.
+Add a final step to scripts/session7_lab.R: a regression table with Model 5 and Model 6 side by side, saved as output/session7_table.html. Use the modelsummary package (tell me if I need to install it). Show standard errors in parentheses under each coefficient, stars for p < 0.05 and p < 0.01, the number of observations and the R-squared. Give the variables readable names (for example "Opinion of US foreign policy" instead of opinion). Keep all controls in the table. Write simple code: no functions of your own.
 ```
 
 If OpenCode says a package is missing, install it in the RStudio Console, for example:
 
 ```r
 install.packages("modelsummary")
-install.packages("sandwich")
-install.packages("lmtest")
 ```
 
-Run the new lines yourself. Then open `output/session7_table.html` in your web browser, select the whole table, copy it and paste it into your word processor (Word, Google Docs, Pages or LibreOffice). Check that the numbers in the pasted table match your R output and Table 3 of the article.
+Run the new lines yourself. Then open `output/session7_table.html` in your web browser, select the whole table, copy it and paste it into your word processor (Word, Google Docs, Pages or LibreOffice). Check that the numbers in the pasted table match your R output.
 
 ---
 
@@ -148,10 +130,10 @@ Run the new lines yourself. Then open `output/session7_table.html` in your web b
 Create a document with:
 
 1. **Title** and your name.
-2. **The regression table** from Step 5, with a short caption, e.g. *Table 1: Opinion of US foreign policy and UN voting with the US, 58 countries, 2002–03 (OLS, robust standard errors in parentheses).*
+2. **The regression table** from Step 5, with a short caption, e.g. *Table 1: Opinion of US foreign policy and UN voting with the US, 58 countries, 2002–03 (OLS, standard errors in parentheses).*
 3. **One paragraph (about 150–200 words) interpreting the results.** Answer these questions in your own words:
    - How large is the opinion slope in each model? What does it mean in terms of UN voting (percentage points) for one unit of opinion?
-   - Could each slope be due to chance? Use the (robust) standard error, the 95% interval or the p-value.
+   - Could each slope be due to chance? Use the standard error, the 95% interval or the p-value.
    - Why does the slope change so much from Model 5 to Model 6? Which control matters most (remember Lab 2 in Session 6)?
    - Would you call the Model 6 slope the **effect** of public opinion on UN voting? Why, or why not?
 
