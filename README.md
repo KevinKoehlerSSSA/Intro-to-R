@@ -90,6 +90,7 @@ We will reproduce the analysis in the article below. Make sure to read it carefu
 
 -  Goldsmith, Benjamin E. and Yusaku Horiuchi. 2012. "In Search of Soft Power: Does Foreign Public Opinion Matter for US Foreign Policy?" *World Politics* 64 (3): 555-585. [doi:10.1017/S0043887112000123](https://www.cambridge.org/core/journals/world-politics/article/in-search-of-soft-power-does-foreign-public-opinion-matter-for-us-foreign-policy/0C9DB5A0FB1EF43767932DE4E2C4DCEF)
 -  The data are available [here](https://github.com/joshuaalley/cross-sectional-ols)
+- [Lab instructions session 7](Session-7-Lab.md): reproduce Models 5 and 6 and write up a regression table with a short interpretation.
 
 ### Session 8: Regression models for binary outcomes
 - Readings: Kennedy and Waggoner 2021, Chapter 7 (focus on section 7.6 Binary Response Models).
