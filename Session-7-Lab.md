@@ -137,4 +137,4 @@ Create a document with:
    - Why does the slope change so much from Model 5 to Model 6? Which control matters most (remember Lab 2 in Session 6)?
    - Would you call the Model 6 slope the **effect** of public opinion on UN voting? Why, or why not?
 
-Save the document as a PDF and hand it in as instructed in class.
+Save the document as a PDF and email it to [kevin.koehler@santannapisa.it](mailto:kevin.koehler@santannapisa.it).
