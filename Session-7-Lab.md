@@ -121,7 +121,7 @@ If OpenCode says a package is missing, install it in the RStudio Console, for ex
 install.packages("modelsummary")
 ```
 
-Run the new lines yourself. Then open `output/session7_table.html` in your web browser, select the whole table, copy it and paste it into your word processor (Word, Google Docs, Pages or LibreOffice). Check that the numbers in the pasted table match your R output.
+Run the new lines yourself. Then open `output/session7_table.html` in your web browser, select the whole table, copy it and paste it into your word processor. Check that the numbers in the pasted table match your R output.
 
 ---
 
